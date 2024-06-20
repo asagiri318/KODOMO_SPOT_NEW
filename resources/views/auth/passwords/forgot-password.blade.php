@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>パスワードリセット</title>
+    <title>パスワードをお忘れですか？</title>
     <!-- Bootstrap の CSS を読み込む -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>パスワードリセット</h1>
+        <h1>パスワードをお忘れですか？</h1>
 
         @if (session('status'))
             <div class="alert alert-success">
@@ -40,7 +40,7 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">パスワードリセットメールを送信する</button>
+                <button type="submit" class="btn btn-primary">パスワードリセットリンクを送信する</button>
             </div>
         </form>
 

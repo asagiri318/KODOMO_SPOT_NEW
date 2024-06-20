@@ -31,20 +31,30 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('password.email') }}">
+        <form method="POST" action="{{ route('password.update') }}">
             @csrf
+
+            <input type="hidden" name="token" value="{{ $token }}">
 
             <div class="form-group">
                 <label for="email">メールアドレス</label>
-                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                <input id="email" type="email" class="form-control" name="email" value="{{ $email ?? old('email') }}" required autofocus>
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">パスワードリセットメールを送信する</button>
+                <label for="password">新しいパスワード</label>
+                <input id="password" type="password" class="form-control" name="password" required autocomplete="new-password">
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation">新しいパスワード（確認用）</label>
+                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">パスワードをリセットする</button>
             </div>
         </form>
-
-        <a href="{{ route('login') }}">ログイン画面に戻る</a>
     </div>
 
     <!-- Bootstrap の JavaScript を読み込む -->

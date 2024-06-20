@@ -40,7 +40,7 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">パスワードリセットメールを送信する</button>
+                <button type="submit" class="btn btn-primary">パスワードリセットリンクを送信する</button>
             </div>
         </form>
 
