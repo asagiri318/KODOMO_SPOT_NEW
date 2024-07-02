@@ -1,11 +1,11 @@
 /* resources/css/app.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 /* カスタムスタイル */
-.btn-blue {
+/* .btn-blue {
     background-color: #2563EB;
     color: #fff;
     padding: 0.5rem 1rem;
@@ -16,4 +16,4 @@
 
 .btn-blue:hover {
     background-color: #1D4ED8;
-}
+} */

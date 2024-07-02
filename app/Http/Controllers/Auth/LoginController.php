@@ -8,11 +8,17 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * ログインフォームを表示する
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    /**
+     * ログイン処理を行う
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -25,14 +31,16 @@ class LoginController extends Controller
             'password.min' => 'パスワードは少なくとも8文字で入力してください。',
         ]);
 
+        // ログインを試みる
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('mypage'));
+            return redirect()->intended(route('mypage')); // ログイン後のリダイレクト先
+        } else {
+            // 認証失敗時のエラーメッセージ
+            return back()->withErrors([
+                'email' => 'メールアドレスまたはパスワードが間違っています。正しい情報を入力してください。',
+            ]);
         }
-
-        return back()->withErrors([
-            'email' => 'ログインに失敗しました。正しい情報を入力してください。',
-        ]);
     }
 }

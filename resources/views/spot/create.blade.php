@@ -5,6 +5,7 @@
     <h1 class="text-3xl font-bold text-center mb-5">新規スポット登録</h1>
     <form method="POST" action="{{ route('spot.store') }}" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         @csrf
+        <input type="hidden" name="user_id" value="{{ Auth::id() }}"> <!-- ログインユーザーのIDを送信 -->
         <div class="mb-4">
             <label for="title" class="block text-sm font-medium text-gray-700">タイトル</label>
             <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>

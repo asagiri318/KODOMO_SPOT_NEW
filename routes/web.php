@@ -10,9 +10,38 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\UserController; // UserController をインポートする
-use App\Http\Controllers\SpotController; // SpotController をインポートする
-use App\Http\Controllers\ProfileController; // ProfileController をインポートする
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SpotController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AjaxController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // プロフィール削除用のルートを追加
+
+    // 他のミドルウェアグループ内のルートはここに移動
+    Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
+        ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+        ->name('password.confirm');
+
+    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -39,38 +68,11 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
-
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
-
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
-
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
-
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
-
-    // マイページのルートを追加し、ログイン後はこちらにリダイレクトする
     Route::get('/', [UserController::class, 'index'])->name('mypage');
-
-    // 既存の '/home' へのルートは削除します
-    // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::get('/spots/create', [SpotController::class, 'create'])->name('spot.create');
     Route::post('/spots', [SpotController::class, 'store'])->name('spot.store');
     Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spot.show');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/ajax/cities', [AjaxController::class, 'getCities'])->name('ajax.cities');

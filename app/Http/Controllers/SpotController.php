@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Spot;
+use Illuminate\Support\Facades\Auth;
 
 class SpotController extends Controller
 {
@@ -39,6 +40,9 @@ class SpotController extends Controller
         $spot->child_age_range = $request->child_age_range;
         $spot->rating = $request->rating;
         $spot->spot_url = $request->spot_url;
+
+        // ログインしているユーザーのIDをセットする
+        $spot->user_id = Auth::id();
 
         // 画像がアップロードされている場合は保存処理を行う
         if ($request->hasFile('photo')) {
