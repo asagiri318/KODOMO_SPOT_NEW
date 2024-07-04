@@ -11,8 +11,13 @@
             <input type="text" name="title" id="title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
         </div>
         <div class="mb-4">
-            <label for="prefecture" class="block text-sm font-medium text-gray-700">都道府県</label>
-            <input type="text" name="prefecture" id="prefecture" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
+            <label for="prefecture_id" class="block text-sm font-medium text-gray-700">都道府県</label>
+            <select name="prefecture_id" id="prefecture_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
+                <option value="">都道府県を選択してください</option>
+                @foreach($prefectures as $prefecture)
+                    <option value="{{ $prefecture->id }}">{{ $prefecture->name }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="mb-4">
             <label for="city" class="block text-sm font-medium text-gray-700">市区町村</label>

@@ -12,7 +12,7 @@ class CreateSpotsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('prefecture');
+            $table->unsignedBigInteger('prefecture_id'); // 変更：prefecture_id カラムを追加
             $table->string('city');
             $table->text('description')->nullable();
             $table->date('date_visited')->nullable();
@@ -21,11 +21,22 @@ class CreateSpotsTable extends Migration
             $table->string('photo')->nullable();
             $table->string('spot_url')->nullable();
             $table->timestamps();
+
+            // 外部キー制約を追加
+            $table->foreign('prefecture_id')
+                ->references('id')
+                ->on('prefectures')
+                ->onDelete('cascade');
         });
     }
 
     public function down()
     {
+        Schema::table('spots', function (Blueprint $table) {
+            // 外部キー制約を削除
+            $table->dropForeign(['prefecture_id']);
+        });
+
         Schema::dropIfExists('spots');
     }
 }

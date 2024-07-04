@@ -4,16 +4,26 @@
 @tailwind utilities;
 
 
-/* カスタムスタイル */
-/* .btn-blue {
-    background-color: #2563EB;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.btn-blue {
+    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
 }
 
 .btn-blue:hover {
-    background-color: #1D4ED8;
-} */
+    @apply bg-blue-700;
+}
+
+.btn-green {
+    @apply bg-green-500 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-green:hover {
+    @apply bg-green-700;
+}
+
+.btn-red {
+    @apply bg-red-500 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-red:hover {
+    @apply bg-red-700;
+}

@@ -44,6 +44,11 @@
                             {{ __('新規スポット登録') }}
                         </x-dropdown-link>
 
+                        <!-- お気に入りリスト -->
+                        <x-dropdown-link :href="route('spot.favorite')">
+                            {{ __('お気に入りリスト') }}
+                        </x-dropdown-link>
+
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"

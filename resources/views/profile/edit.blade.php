@@ -44,13 +44,15 @@
         </div>
 
         <div id="children-birthdates">
-            @foreach($children as $index => $child)
-                <div class="flex items-center mb-2">
-                    <label class="block text-sm font-medium text-gray-700">お子様の生年月日</label>
-                    <input type="date" name="children_birthdates[]" value="{{ old('children_birthdates.' . $index, optional($child)->birthdate ? $child->birthdate->format('Y-m-d') : '') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
-                    <button type="button" class="ml-2 btn-red" onclick="removeBirthdateField(this)">削除</button>
-                </div>
-            @endforeach
+            @if($children->isNotEmpty())
+                @foreach($children as $index => $child)
+                    <div class="flex items-center mb-2">
+                        <label class="block text-sm font-medium text-gray-700">お子様の生年月日</label>
+                        <input type="date" name="children_birthdates[]" value="{{ old('children_birthdates.' . $index, $child['birthdate']) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                        <button type="button" class="ml-2 btn-red" onclick="removeBirthdateField(this)">削除</button>
+                    </div>
+                @endforeach
+            @endif
         </div>
 
         <button type="button" class="btn-blue mt-2" onclick="addBirthdateField()">お子様の追加</button>

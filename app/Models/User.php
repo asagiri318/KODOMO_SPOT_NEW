@@ -60,8 +60,20 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // 子供の生年月日情報とのリレーションシップ
-    public function childrenAges()
+    public function children()
     {
         return $this->hasMany(UserChild::class);
+    }
+
+    // ユーザーが登録したスポットとのリレーションシップ
+    public function spots()
+    {
+        return $this->hasMany(Spot::class);
+    }
+
+    // お気に入りしたスポットとのリレーションシップ
+    public function favoriteSpots()
+    {
+        return $this->belongsToMany(Spot::class, 'user_favorite_spots', 'user_id', 'spot_id')->withTimestamps();
     }
 }

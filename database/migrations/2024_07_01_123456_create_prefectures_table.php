@@ -10,7 +10,7 @@ class CreatePrefecturesTable extends Migration
     {
         Schema::create('prefectures', function (Blueprint $table) {
             $table->id(); // 自動増分のIDを追加
-            $table->string('name'); // 都道府県名を保存するカラム
+            $table->string('name')->unique(); // 都道府県名を保存するカラム
             $table->timestamps(); // 作成日時と更新日時を追加
         });
     }

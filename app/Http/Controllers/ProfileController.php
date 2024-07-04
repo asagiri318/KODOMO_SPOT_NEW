@@ -14,8 +14,8 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        $prefectures = Prefecture::all();
-        $children = $user->childrenAges->map(function ($child) {
+        $prefectures = Prefecture::distinct()->get();
+        $children = $user->children->map(function ($child) {
             return [
                 'id' => $child->id,
                 'birthdate' => Carbon::parse($child->birthdate)->format('Y-m-d'), // 生年月日をフォーマットして取得
@@ -72,5 +72,14 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('mypage')->with('status', 'プロフィールが更新されました');
+    }
+
+    public function showMypage()
+    {
+        $user = Auth::user();
+        $spots = $user->spots; // ユーザーが登録したスポットを取得
+        $children = $user->children; // ユーザーの子供情報を取得
+
+        return view('mypage', compact('user', 'spots', 'children'));
     }
 }

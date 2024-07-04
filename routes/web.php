@@ -14,13 +14,20 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SpotController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AjaxController;
+use App\Models\Prefecture;
+use App\Http\Controllers\FavoriteController;
 
-Route::middleware(['auth'])->group(function () {
+Route::post('/spots/{id}/favorite', [FavoriteController::class, 'addToFavorites'])->name('favorites.add');
+Route::post('/spots/{id}/unfavorite', [FavoriteController::class, 'removeFromFavorites'])->name('favorites.remove');
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+
+Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // プロフィール削除用のルートを追加
 
-    // 他のミドルウェアグループ内のルートはここに移動
+    Route::post('/spots/{spot}/favorite', [SpotController::class, 'addToFavorites'])->name('spot.addToFavorites');
+
     Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
         ->name('verification.notice');
 
@@ -41,6 +48,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('/', [UserController::class, 'index'])->name('mypage');
+
+    Route::get('/spots/create', [SpotController::class, 'create'])->name('spot.create');
+    Route::post('/spots', [SpotController::class, 'store'])->name('spot.store');
+    Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spot.show');
+
+    Route::get('/spot/favorite', [SpotController::class, 'favorite'])->name('spot.favorite');
+
+    Route::get('/mypage', [ProfileController::class, 'showMypage'])->name('mypage');
+
+    Route::get('/spots/{id}/edit', [SpotController::class, 'edit'])->name('spot.edit');
+    Route::put('/spots/{id}', [SpotController::class, 'update'])->name('spot.update');
+    Route::delete('/spots/{id}', [SpotController::class, 'destroy'])->name('spot.destroy');
 });
 
 Route::middleware('guest')->group(function () {
@@ -65,14 +86,6 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.update');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('mypage');
-
-    Route::get('/spots/create', [SpotController::class, 'create'])->name('spot.create');
-    Route::post('/spots', [SpotController::class, 'store'])->name('spot.store');
-    Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spot.show');
 });
 
 Route::post('/ajax/cities', [AjaxController::class, 'getCities'])->name('ajax.cities');
