@@ -1,5 +1,3 @@
-// tailwind.config.js
-
 const defaultTheme = require('tailwindcss/defaultTheme');
 const forms = require('@tailwindcss/forms');
 
@@ -15,9 +13,18 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            width: {
+                '72': '30rem', // カスタム幅を追加
+                '84': '21rem',
+                '96': '24rem',
+            },
+            height: {
+                '72': '13rem', // カスタム高さを追加
+                '84': '21rem',
+                '96': '24rem',
+            },
         },
     },
 
     plugins: [forms],
 };
-

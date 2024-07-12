@@ -11,13 +11,12 @@ class Spot extends Model
 
     protected $fillable = [
         'title',
-        'prefecture',
+        'prefecture_id',
         'city',
         'description',
         'date_visited',
         'child_age_range',
         'rating',
-        'photo',
         'spot_url',
     ];
 
@@ -47,20 +46,10 @@ class Spot extends Model
     }
 
     /**
-     * バリデーションルールを定義
+     * スポットに関連する写真を取得
      */
-    public static function rules()
+    public function photos()
     {
-        return [
-            'title' => 'required|string|max:255',
-            'prefecture_id' => 'required|exists:prefectures,id',
-            'city' => 'required|string|max:100',
-            'description' => 'required|string',
-            'date_visited' => 'required|date',
-            'child_age_range' => 'required|string|max:50',
-            'rating' => 'required|integer|min:1|max:5',
-            'photo' => 'nullable|image|max:2048', // 画像の最大サイズは2048KB (2MB)
-            'spot_url' => 'nullable|url|max:255',
-        ];
+        return $this->hasMany(SpotPhoto::class);
     }
 }

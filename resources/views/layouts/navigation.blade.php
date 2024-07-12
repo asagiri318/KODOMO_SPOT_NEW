@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('mypage') }}"> <!-- マイページにリンクする -->
+                    <a href="{{ route('mypage') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
@@ -16,6 +16,13 @@
                         {{ __('Home') }}
                     </x-nav-link>
                 </div>
+            </div>
+
+            <!-- Center Link -->
+            <div class="hidden sm:flex sm:items-center">
+                <x-nav-link :href="route('shared')" :active="request()->routeIs('shared')" class="text-lg font-bold">
+                    {{ __('みんなの共有スポット') }}
+                </x-nav-link>
             </div>
 
             <!-- Right Side Of Navbar -->
@@ -79,6 +86,13 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('mypage')" :active="request()->routeIs('mypage')">
                 {{ __('Home') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <!-- Responsive Center Link -->
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('shared')" :active="request()->routeIs('shared')">
+                {{ __('みんなの共有スポット') }}
             </x-responsive-nav-link>
         </div>
 

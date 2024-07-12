@@ -14,9 +14,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('profile_photo_url')->nullable(); // プロフィール写真のURL
+            $table->string('photo')->nullable(); // プロフィール写真のURL
             $table->foreignId('prefecture_id')->nullable()->constrained('prefectures'); // 都道府県ID
             $table->string('city')->nullable(); // 市区町村の文字列
+            $table->string('introduction')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

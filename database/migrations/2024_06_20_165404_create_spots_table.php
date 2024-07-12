@@ -18,7 +18,6 @@ class CreateSpotsTable extends Migration
             $table->date('date_visited')->nullable();
             $table->string('child_age_range')->nullable();
             $table->integer('rating')->nullable();
-            $table->string('photo')->nullable();
             $table->string('spot_url')->nullable();
             $table->timestamps();
 

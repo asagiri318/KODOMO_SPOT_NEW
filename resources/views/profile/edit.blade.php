@@ -24,10 +24,24 @@
         </div>
 
         <div class="mb-4">
+            <label for="profile_photo" class="block text-sm font-medium text-gray-700">プロフィール写真</label>
+            <input type="file" name="profile_photo" id="profile_photo" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+            @if ($user->photo)
+                <div class="mt-2">
+                    <img src="{{ Storage::url($user->photo) }}" alt="プロフィール写真" class="w-20 h-20 rounded-full object-cover">
+                    <button type="button" class="ml-2 btn-red delete-photo-btn">画像を削除</button>
+                </div>
+            @endif
+            @error('profile_photo')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mb-4">
             <label for="prefecture_id" class="block text-sm font-medium text-gray-700">都道府県</label>
             <select name="prefecture_id" id="prefecture_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
-                @foreach($prefectures as $prefecture)
-                    <option value="{{ $prefecture->id }}" {{ old('prefecture_id', $user->prefecture_id) == $prefecture->id ? 'selected' : '' }}>{{ $prefecture->name }}</option>
+                @foreach(config('prefectures') as $prefecture)
+                    <option value="{{ $loop->index + 1 }}" {{ old('prefecture_id', $user->prefecture_id) == ($loop->index + 1) ? 'selected' : '' }}>{{ $prefecture['name'] }}</option>
                 @endforeach
             </select>
             @error('prefecture_id')
@@ -39,6 +53,14 @@
             <label for="city" class="block text-sm font-medium text-gray-700">市区町村</label>
             <input type="text" name="city" id="city" value="{{ old('city', $user->city) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
             @error('city')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="introduction" class="block text-sm font-medium text-gray-700">自己紹介</label>
+            <textarea name="introduction" id="introduction" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">{{ old('introduction', $user->introduction) }}</textarea>
+            @error('introduction')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
@@ -57,48 +79,30 @@
 
         <button type="button" class="btn-blue mt-2" onclick="addBirthdateField()">お子様の追加</button>
 
-        <div class="mb-4 flex justify-between">
+        <div class="mb-4 mt-4 flex justify-between">
             <button type="submit" class="btn-blue">更新する</button>
             <a href="{{ route('mypage') }}" class="btn-blue">キャンセル</a>
         </div>
+    </form>
+
+    <form method="POST" action="{{ route('profile.deletePhoto') }}" id="delete-photo-form" style="display: none;">
+        @csrf
+        @method('DELETE')
     </form>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
-    // 初期値をセットする
-    var initialPrefectureId = $('#prefecture_id').val();
-    if (initialPrefectureId) {
-        $('#prefecture_id').trigger('change');
-    }
-
-    // Ajaxリクエストを送信する
-    $('#prefecture_id').on('change', function() {
-        var prefecture_id = $(this).val();
-        
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: "POST",
-            url: "{{ route('ajax.cities') }}",
-            data: { prefecture_id: prefecture_id },
-            dataType: "json",
-            success: function(response) {
-                var $citySelect = $('#city_id');
-                $citySelect.empty();
-                $.each(response.data, function(index, city) {
-                    $citySelect.append($('<option></option>').attr('value', city.id).text(city.name));
-                });
-            },
-            error: function() {
-                console.log('市区町村の取得に失敗しました。');
-            }
-        });
+    $('.delete-photo-btn').on('click', function(event) {
+        event.preventDefault();
+        deleteProfilePhoto();
     });
 
-    // 子供の生年月日フィールドの追加・削除
+    window.deleteProfilePhoto = function() {
+        $('#delete-photo-form').submit();
+    }
+
     window.addBirthdateField = function() {
         const container = $('#children-birthdates');
         const field = $('<div>').addClass('flex items-center mb-2');

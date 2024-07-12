@@ -49,7 +49,9 @@ class UserController extends Controller
             'prefecture_id' => 'required|exists:prefectures,id',
             'city' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date_format:Y-m-d',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 追加: プロフィール写真のバリデーション
             'children_birthdates.*' => 'nullable|date_format:Y-m-d',
+            'introduction' => 'nullable|string|max:1000',
         ]);
 
         $user->nickname = $request->input('nickname');
@@ -57,6 +59,14 @@ class UserController extends Controller
         $user->prefecture_id = $request->input('prefecture_id');
         $user->city = $request->input('city');
         $user->birthdate = $request->input('birthdate');
+        $user->introduction = $request->input('introduction');
+
+        // プロフィール写真の更新処理
+        if ($request->hasFile('profile_photo')) {
+            $imagePath = $request->file('profile_photo')->store('profile_photos', 'public');
+            $user->photo = $imagePath;
+        }
+
         $user->save();
 
         // 子供の生年月日情報の更新または追加
@@ -72,5 +82,14 @@ class UserController extends Controller
         }
 
         return redirect()->route('mypage')->with('status', 'プロフィールが更新されました');
+    }
+
+    public function profile($id)
+    {
+        $user = User::findOrFail($id);
+        $spots = Spot::where('user_id', $id)->get();
+        $children = UserChild::where('user_id', $id)->get();
+
+        return view('profile.profile', compact('user', 'spots', 'children'));
     }
 }

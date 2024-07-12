@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Prefecture;
+use App\Models\User;
 use App\Models\UserChild;
-use Carbon\Carbon;
+use App\Models\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
     public function edit()
     {
         $user = Auth::user();
-        $prefectures = Prefecture::distinct()->get();
+        $prefectures = Prefecture::all();
         $children = $user->children->map(function ($child) {
             return [
                 'id' => $child->id,
-                'birthdate' => Carbon::parse($child->birthdate)->format('Y-m-d'), // 生年月日をフォーマットして取得
+                'birthdate' => Carbon::parse($child->birthdate)->format('Y-m-d'),
             ];
         });
 
@@ -33,7 +34,8 @@ class ProfileController extends Controller
             'profile_photo' => 'nullable|image|max:2048',
             'prefecture_id' => 'required|exists:prefectures,id',
             'city' => 'nullable|string|max:255',
-            'children_birthdates.*' => 'nullable|date_format:Y-m-d', // 子供の生年月日は配列で受け取る
+            'children_birthdates.*' => 'nullable|date_format:Y-m-d',
+            'introduction' => 'nullable|string|max:1000', // introduction のバリデーションルールを追加
         ]);
 
         $user = Auth::user();
@@ -41,13 +43,21 @@ class ProfileController extends Controller
         $user->email = $request->email;
         $user->prefecture_id = $request->prefecture_id;
         $user->city = $request->city;
+        $user->introduction = $request->introduction; // introduction の更新を追加
 
+        // プロフィール写真の更新処理
         if ($request->hasFile('profile_photo')) {
-            if ($user->profile_photo_path) {
-                Storage::disk('public')->delete($user->profile_photo_path);
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
             }
-            $user->profile_photo_path = $request->file('profile_photo')->store('profile_photos', 'public');
+
+            $file = $request->file('profile_photo');
+            $filename = $user->id . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('profile_photos', $filename, 'public');
+            $user->photo = $path;
         }
+
+        $user->save();
 
         // 子供の生年月日を更新
         if ($request->has('children_birthdates')) {
@@ -55,30 +65,36 @@ class ProfileController extends Controller
             UserChild::where('user_id', $user->id)->delete(); // 一旦古い情報を削除
 
             foreach ($childrenBirthdates as $birthdate) {
-                $child = new UserChild();
-                $child->user_id = $user->id;
-
-                // データが正しい日付形式かチェック
                 if (strtotime($birthdate)) {
-                    $child->birthdate = Carbon::createFromFormat('Y-m-d', $birthdate); // Carbon インスタンスに変換
+                    $child = new UserChild();
+                    $child->user_id = $user->id;
+                    $child->birthdate = Carbon::createFromFormat('Y-m-d', $birthdate);
                     $child->save();
-                } else {
-                    // 正しい日付形式でない場合はエラー処理を行うか、スキップする
-                    continue;
                 }
             }
         }
 
-        $user->save();
-
         return redirect()->route('mypage')->with('status', 'プロフィールが更新されました');
+    }
+
+    public function deletePhoto(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->photo) {
+            Storage::disk('public')->delete($user->photo);
+            $user->photo = null;
+            $user->save();
+        }
+
+        return redirect()->route('profile.edit')->with('status', 'プロフィール写真が削除されました');
     }
 
     public function showMypage()
     {
         $user = Auth::user();
-        $spots = $user->spots; // ユーザーが登録したスポットを取得
-        $children = $user->children; // ユーザーの子供情報を取得
+        $spots = $user->spots()->get(); // 関連するリレーションを使ってスポットを取得
+        $children = $user->children()->get(); // 関連するリレーションを使って子供情報を取得
 
         return view('mypage', compact('user', 'spots', 'children'));
     }

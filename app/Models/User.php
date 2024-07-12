@@ -16,9 +16,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'nickname',
         'email',
         'password',
-        'profile_photo_url',
-        'prefecture_id',  // 都道府県ID
-        'city',           // 市区町村
+        'photo', // プロフィール写真のカラム名を修正
+        'prefecture_id', // 都道府県ID
+        'city', // 市区町村
+        'introduction',
     ];
 
     protected $hidden = [
@@ -33,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // 都道府県とのリレーションシップ
     public function prefecture()
     {
-        return $this->belongsTo(Prefecture::class);
+        return $this->belongsTo(Prefecture::class, 'prefecture_id');
     }
 
     // 年齢を計算するメソッド
@@ -43,20 +44,6 @@ class User extends Authenticatable implements MustVerifyEmail
             return Carbon::parse($this->birthdate)->age;
         }
         return null;
-    }
-
-    // ProfileController で使用する save メソッドをオーバーライド
-    public function save(array $options = [])
-    {
-        // ここに保存処理の実装を追加する
-        parent::save($options);
-    }
-
-    // ProfileController で使用する delete メソッドをオーバーライド
-    public function delete(array $options = [])
-    {
-        // ここに削除処理の実装を追加する
-        parent::delete($options);
     }
 
     // 子供の生年月日情報とのリレーションシップ

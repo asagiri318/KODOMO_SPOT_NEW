@@ -60,14 +60,19 @@
                 <input type="number" name="rating" id="rating" value="{{ old('rating', $spot->rating) }}" class="w-full p-2 border border-gray-300 rounded">
             </div>
 
-            <div class="mb-4">
-                <label for="photo" class="block text-gray-700">写真</label>
-                @if ($spot->photo)
-                    <img src="{{ Storage::url($spot->photo) }}" alt="Spot Photo" class="mb-2">
-                @endif
-                <input type="file" name="photo" id="photo" class="w-full p-2 border border-gray-300 rounded">
+            <div id="photo-fields" class="mb-4">
+                <label for="photos" class="block text-sm font-medium text-gray-700 mb-1">写真 (最大3つ)</label>
+                @foreach($spot->photos as $photo)
+                    <div class="photo-input flex items-center mb-2">
+                        <input type="file" name="photos[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                        <button type="button" class="ml-2 btn-red remove-photo-btn">削除</button>
+                    </div>
+                    <img src="{{ asset($photo->photo_path) }}" class="h-10 w-20 rounded-lg mb-2 mr-2">
+                @endforeach
             </div>
-
+            <p id="photo-error" class="text-red-500 text-xs mt-1" style="display: none;">写真は最大3つまで選択できます。</p>
+            <button type="button" id="add-photo-btn" class="btn-blue mt-1 mb-4">写真の追加</button>
+            
             <div class="mb-4">
                 <label for="spot_url" class="block text-gray-700">スポットのURL</label>
                 <input type="text" name="spot_url" id="spot_url" value="{{ old('spot_url', $spot->spot_url) }}" class="w-full p-2 border border-gray-300 rounded">
@@ -80,4 +85,43 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let photoFieldsContainer = document.getElementById('photo-fields');
+    let addPhotoBtn = document.getElementById('add-photo-btn');
+    let maxPhotos = 3;
+
+    addPhotoBtn.addEventListener('click', function() {
+        let photoInputs = document.querySelectorAll('#photo-fields .photo-input');
+        if (photoInputs.length < maxPhotos) {
+            let newPhotoInput = document.createElement('div');
+            newPhotoInput.classList.add('photo-input', 'flex', 'items-center', 'mb-2');
+            newPhotoInput.innerHTML = `
+                <input type="file" name="photos[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                <button type="button" class="ml-2 btn-red remove-photo-btn">削除</button>
+            `;
+            photoFieldsContainer.appendChild(newPhotoInput);
+            updateRemovePhotoBtns();
+        } else {
+            document.getElementById('photo-error').style.display = 'block';
+        }
+    });
+
+    function updateRemovePhotoBtns() {
+        let removePhotoBtns = document.querySelectorAll('.remove-photo-btn');
+        removePhotoBtns.forEach(function(btn) {
+            btn.removeEventListener('click', removePhotoInput);
+            btn.addEventListener('click', removePhotoInput);
+        });
+    }
+
+    function removePhotoInput(event) {
+        event.target.parentElement.remove();
+        document.getElementById('photo-error').style.display = 'none';
+    }
+
+    updateRemovePhotoBtns();
+});
+</script>
 @endsection
