@@ -12,7 +12,7 @@ class CreateSpotsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->unsignedBigInteger('prefecture_id'); // 変更：prefecture_id カラムを追加
+            $table->string('prefecture'); // 変更：prefecture_id カラムを追加
             $table->string('city');
             $table->text('description')->nullable();
             $table->date('date_visited')->nullable();
