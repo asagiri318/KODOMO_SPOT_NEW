@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserChild;
-use App\Models\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +14,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-        $prefectures = Prefecture::all();
+        $prefectures = config('prefectures');
         $children = $user->children->map(function ($child) {
             return [
                 'id' => $child->id,
@@ -32,18 +31,18 @@ class ProfileController extends Controller
             'nickname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
             'profile_photo' => 'nullable|image|max:2048',
-            'prefecture_id' => 'required|exists:prefectures,id',
+            'prefecture' => 'required|string',
             'city' => 'nullable|string|max:255',
             'children_birthdates.*' => 'nullable|date_format:Y-m-d',
-            'introduction' => 'nullable|string|max:1000', // introduction のバリデーションルールを追加
+            'introduction' => 'nullable|string|max:1000',
         ]);
 
         $user = Auth::user();
         $user->nickname = $request->nickname;
         $user->email = $request->email;
-        $user->prefecture_id = $request->prefecture_id;
+        $user->prefecture = $request->prefecture;
         $user->city = $request->city;
-        $user->introduction = $request->introduction; // introduction の更新を追加
+        $user->introduction = $request->introduction;
 
         // プロフィール写真の更新処理
         if ($request->hasFile('profile_photo')) {
@@ -62,7 +61,7 @@ class ProfileController extends Controller
         // 子供の生年月日を更新
         if ($request->has('children_birthdates')) {
             $childrenBirthdates = $request->children_birthdates;
-            UserChild::where('user_id', $user->id)->delete(); // 一旦古い情報を削除
+            UserChild::where('user_id', $user->id)->delete();
 
             foreach ($childrenBirthdates as $birthdate) {
                 if (strtotime($birthdate)) {
@@ -93,8 +92,8 @@ class ProfileController extends Controller
     public function showMypage()
     {
         $user = Auth::user();
-        $spots = $user->spots()->get(); // 関連するリレーションを使ってスポットを取得
-        $children = $user->children()->get(); // 関連するリレーションを使って子供情報を取得
+        $spots = $user->spots()->get();
+        $children = $user->children()->get();
 
         return view('mypage', compact('user', 'spots', 'children'));
     }

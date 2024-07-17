@@ -30,7 +30,7 @@
                                 ・{{ $spot->title }}
                                 <span class="text-sm text-gray-500">
                                     @if ($spot->prefecture)
-                                        {{ $spot->prefecture->name }}
+                                        {{ $spot->prefecture }}
                                     @endif
                                     {{ $spot->city }}
                                 </span>

@@ -38,16 +38,16 @@
         </div>
 
         <div class="mb-4">
-            <label for="prefecture_id" class="block text-sm font-medium text-gray-700">都道府県</label>
-            <select name="prefecture_id" id="prefecture_id" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
-                @foreach(config('prefectures') as $prefecture)
-                    <option value="{{ $loop->index + 1 }}" {{ old('prefecture_id', $user->prefecture_id) == ($loop->index + 1) ? 'selected' : '' }}>{{ $prefecture['name'] }}</option>
+            <label for="prefecture" class="block text-sm font-medium text-gray-700">都道府県</label>
+            <select name="prefecture" id="prefecture" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
+                @foreach(config('prefectures') as $index => $prefecture)
+                    <option value="{{ $index + 1 }}" {{ old('prefecture', $user->prefecture) == ($index + 1) ? 'selected' : '' }}>{{ $prefecture['name'] }}</option>
                 @endforeach
             </select>
-            @error('prefecture_id')
+            @error('prefecture')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
-        </div>
+        </div>        
 
         <div class="mb-4">
             <label for="city" class="block text-sm font-medium text-gray-700">市区町村</label>

@@ -22,15 +22,23 @@
         </div>
         <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
           <p class="leading-relaxed text-lg mb-4">
-            @if ($user->city)
-              住所：{{ $user->prefecture->name }} <!-- 都道府県 -->
-              &nbsp;{{ $user->city }} <!-- 市区町村 -->
-            @elseif ($user->prefecture_id && $user->prefecture)
-              住所：{{ $user->prefecture->name }} <!-- 都道府県のみが選択されている場合は都道府県名のみ表示 -->
+            @if ($user->prefecture)
+                @php
+                    $prefectureId = $user->prefecture;
+                    $prefectureName = config('prefectures')[$prefectureId - 1]['name'] ?? null;
+                @endphp
+                @if ($prefectureName)
+                    住所：{{ $prefectureName }} <!-- 都道府県の名前 -->
+                @else
+                    住所：未設定 <!-- 対応する都道府県が見つからない場合の表示 -->
+                @endif
+                @if ($user->city)
+                    &nbsp;{{ $user->city }} <!-- 市区町村 -->
+                @endif
             @else
-              住所：未設定 <!-- 住所が設定されていない場合の表示 -->
+                住所：未設定 <!-- 都道府県が設定されていない場合の表示 -->
             @endif
-          </p>
+        </p>        
           <p class="leading-relaxed text-lg mb-4">
             @if ($children->isNotEmpty())
                 お子様の年齢：
@@ -61,7 +69,7 @@
                       <div class="flex justify-between items-center">
                           <span>
                               ・{{ $spot->title }}
-                              <span class="text-sm text-gray-500">&nbsp;{{ $spot->prefecture->name }}&nbsp;{{ $spot->city }}</span>
+                              <span class="text-sm text-gray-500">&nbsp;{{ $spot->prefecture }}&nbsp;{{ $spot->city }}</span>
                               <span class="text-sm text-yellow-500">
                                   @for ($i = 0; $i < $spot->rating; $i++)
                                       ☆

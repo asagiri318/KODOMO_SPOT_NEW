@@ -46,7 +46,7 @@ class UserController extends Controller
         $request->validate([
             'nickname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'prefecture_id' => 'required|exists:prefectures,id',
+            'prefecture' => 'required|string',
             'city' => 'nullable|string|max:255',
             'birthdate' => 'nullable|date_format:Y-m-d',
             'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 追加: プロフィール写真のバリデーション
@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user->nickname = $request->input('nickname');
         $user->email = $request->input('email');
-        $user->prefecture_id = $request->input('prefecture_id');
+        $user->prefecture = $request->input('prefecture_id');
         $user->city = $request->input('city');
         $user->birthdate = $request->input('birthdate');
         $user->introduction = $request->input('introduction');

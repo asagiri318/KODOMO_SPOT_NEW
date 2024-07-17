@@ -12,7 +12,7 @@
         <h1 class="text-3xl font-bold mb-4">{{ $spot->title }}</h1>
         <p class="mb-2">場所:
             @if ($spot->prefecture)
-                {{ $spot->prefecture->name }}
+                {{ $spot->prefecture }}
             @endif
             {{ $spot->city }}</p>
         <p class="mb-2">日付: {{ $spot->date_visited }}</p>

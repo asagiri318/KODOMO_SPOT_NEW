@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'photo', // プロフィール写真のカラム名を修正
-        'prefecture_id', // 都道府県ID
+        'prefecture', // 都道府県ID
         'city', // 市区町村
         'introduction',
     ];
@@ -34,7 +34,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // 都道府県とのリレーションシップ
     public function prefecture()
     {
-        return $this->belongsTo(Prefecture::class, 'prefecture_id');
+        return $this->belongsTo(Prefecture::class);
     }
 
     // 年齢を計算するメソッド

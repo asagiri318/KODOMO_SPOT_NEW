@@ -16,7 +16,7 @@ class SpotController extends Controller
     {
         return [
             'title' => 'required|string|max:255',
-            'prefecture_id' => 'required|exists:prefectures,id',
+            'prefecture' => 'required|string',
             'city' => 'required|string|max:100',
             'description' => 'required|string',
             'date_visited' => 'required|date',
@@ -29,7 +29,7 @@ class SpotController extends Controller
 
     public function create()
     {
-        $prefectures = Prefecture::all(); // 都道府県の一覧を取得
+        $prefectures = config('prefectures'); // config ファイルから都道府県の一覧を取得
 
         return view('spot.create', [
             'prefectures' => $prefectures,
@@ -49,7 +49,7 @@ class SpotController extends Controller
 
         // フォームリクエストのデータを Spot モデルにセット
         $spot->title = $request->title;
-        $spot->prefecture_id = $request->prefecture_id;
+        $spot->prefecture = $request->prefecture;
         $spot->city = $request->city;
         $spot->description = $request->description;
         $spot->date_visited = $request->date_visited;
@@ -124,7 +124,7 @@ class SpotController extends Controller
         $photos = SpotPhoto::where('spot_id', $id)->get();
 
         // 都道府県を取得
-        $prefectures = Prefecture::all();
+        $prefectures = config('prefectures');
 
         // 編集ページを表示
         return view('spot.edit', [
@@ -147,7 +147,7 @@ class SpotController extends Controller
 
         // フォームリクエストのデータを Spot モデルにセット
         $spot->title = $request->title;
-        $spot->prefecture_id = $request->prefecture_id;
+        $spot->prefecture = $request->prefecture;
         $spot->city = $request->city;
         $spot->description = $request->description;
         $spot->date_visited = $request->date_visited;

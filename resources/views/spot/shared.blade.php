@@ -23,7 +23,7 @@
                             <p class="text-sm mt-2">{{ Str::limit($spot->description, 100) }}</p>
                             <p class="text-sm text-gray-500 mt-1">
                                 @if ($spot->prefecture)
-                                    {{ $spot->prefecture->name }} {{ $spot->city }}
+                                    {{ $spot->prefecture }} {{ $spot->city }}
                                 @else
                                     {{ $spot->city }}
                                 @endif
