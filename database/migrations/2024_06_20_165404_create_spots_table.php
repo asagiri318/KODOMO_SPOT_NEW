@@ -20,12 +20,6 @@ class CreateSpotsTable extends Migration
             $table->integer('rating')->nullable();
             $table->string('spot_url')->nullable();
             $table->timestamps();
-
-            // 外部キー制約を追加
-            $table->foreign('prefecture_id')
-                ->references('id')
-                ->on('prefectures')
-                ->onDelete('cascade');
         });
     }
 
