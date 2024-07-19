@@ -87,19 +87,6 @@
         <main class="flex-grow mt-16 sm:mt-0" style="padding-bottom: 100px;">
             @yield('content')
         </main>
-
-        <!-- Footer -->
-        <footer class="bg-white dark:bg-gray-800 shadow fixed bottom-0 left-0 right-0">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">
-                        &copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. All rights reserved.
-                    </p>
-                    @auth
-                    @endauth
-                </div>
-            </div>
-        </footer>
     </div>
 </body>
 </html>
