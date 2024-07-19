@@ -16,6 +16,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SpotPhotoController;
+use App\Http\Controllers\LikeController;
+
+Route::post('/spots/{spot}/like', [LikeController::class, 'toggleLike'])->name('spot.like');
+Route::get('/spots/{spot}/like-count', [LikeController::class, 'likeCount'])->name('spot.like-count');
+Route::post('/spots/{spotId}/like', [LikeController::class, 'toggleLike'])->name('spot.toggleLike');
+Route::get('/spots/{spotId}/like-count', [LikeController::class, 'likeCount'])->name('spot.likeCount');
 
 Route::delete('/spot-photos/{id}', [SpotPhotoController::class, 'destroy'])->name('spot-photos.destroy');
 

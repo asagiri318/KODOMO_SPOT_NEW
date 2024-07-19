@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto mt-5">
-    <h1 class="text-3xl font-bold text-center mb-5">プロフィール編集</h1>
+    <h1 class="dark:text-white text-3xl font-bold text-center mb-5">プロフィール編集</h1>
     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         @csrf
         @method('PATCH')

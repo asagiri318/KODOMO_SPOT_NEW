@@ -29,17 +29,19 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nickname' => 'required|string|max:255', // ニックネームのバリデーションを追加
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'birthdate' => 'nullable|date', // 追加: 生年月日のバリデーション
-            'address' => 'nullable|string|max:255', // 追加: 都道府県・市区町村のバリデーション
+            'birthdate' => 'nullable|date', // 生年月日のバリデーションを追加
+            'address' => 'nullable|string|max:255', // 都道府県・市区町村のバリデーションを追加
         ]);
 
         $user = User::create([
+            'nickname' => $request->nickname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'birthdate' => $request->birthdate, // 追加: 生年月日を保存
-            'address' => $request->address,     // 追加: 都道府県・市区町村を保存
+            'birthdate' => $request->birthdate,
+            'address' => $request->address,
         ]);
 
         Auth::login($user);

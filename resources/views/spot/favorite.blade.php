@@ -4,51 +4,44 @@
 <div class="container mx-auto mt-5 px-4">
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-3xl font-bold mb-4">お気に入り一覧</h1>
-
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">成功!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
-
-        @if (session('info'))
-            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">情報!</strong>
-                <span class="block sm:inline">{{ session('info') }}</span>
-            </div>
-        @endif
-
+        
         @if($favoriteSpots->isEmpty())
-            <p>お気に入り登録したスポットはありません。</p>
+            <p>まだスポットが登録されていません。</p>
         @else
-            <ul>
+            <ul class="space-y-4">
                 @foreach($favoriteSpots as $spot)
-                    <li class="mb-4">
-                        <div class="flex justify-between items-center">
-                            <span>
-                                ・{{ $spot->title }}
-                                <span class="text-sm text-gray-500">
-                                    @if ($spot->prefecture)
-                                        {{ $spot->prefecture }}
-                                    @endif
-                                    {{ $spot->city }}
-                                </span>
-                                <span class="text-sm text-yellow-500">
-                                    @for ($i = 0; $i < $spot->rating; $i++)
-                                        ☆
-                                    @endfor
-                                </span>
-                            </span>
-                            <div class="flex">
-                                <a href="{{ route('spot.show', $spot->id) }}" class="btn-blue">詳細を表示</a>
-                                <form action="{{ route('favorites.remove', $spot->id) }}" method="POST" class="inline-block ml-2">
-                                    @csrf
-                                    <button type="submit" class="btn-red">お気に入りから削除</button>
-                                </form>
-                            </div>
+                <li class="mb-4 p-4 border rounded-md hover:bg-gray-100 transition cursor-pointer" onclick="location.href='{{ route('spot.show', $spot->id) }}'">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 overflow-hidden mr-4">
+                            @if ($spot->photos->isNotEmpty())
+                                <img src="{{ asset($spot->photos->first()->photo_path) }}" alt="Spot Image" class="rounded-md h-full w-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 rounded-md">No image</div>
+                            @endif
                         </div>
-                    </li>
+                        <div class="ml-4 sm:ml-8 flex-1">
+                            <h2 class="font-bold text-lg">{{ $spot->title }}</h2>
+                            <p class="text-sm text-gray-500 mt-1">
+                                @if ($spot->prefecture)
+                                    {{ $spot->prefecture }} {{ $spot->city }}
+                                @else
+                                    {{ $spot->city }}
+                                @endif
+                            </p>
+                            <p class="text-sm text-yellow-500 mt-1">
+                                @for ($i = 0; $i < $spot->rating; $i++)
+                                    ☆
+                                @endfor
+                            </p>
+                        </div>
+                        <div class="ml-auto">
+                            <form action="{{ route('favorites.remove', $spot->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn-red text-xs">外す</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
                 @endforeach
             </ul>
         @endif

@@ -3,11 +3,39 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
 
 class RegisterController extends Controller
 {
+    // リダイレクト先
+    protected $redirectTo = '/home';
+
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'nickname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+    }
+
+    protected function create(array $data)
+    {
+        return User::create([
+            'nickname' => $data['nickname'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+    }
+
     public function showRegistrationForm()
     {
         return view('auth.register');
@@ -15,23 +43,13 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|confirmed|min:8',
-        ]);
+        $this->validator($request->all())->validate();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        $user = $this->create($request->all());
 
-        // ユーザー登録処理が完了したことを通知するためのリダイレクトとメッセージ
-        if ($user) {
-            return redirect()->route('login')->with('status', 'ユーザー登録が完了しました');
-        } else {
-            return back()->withErrors(['email' => 'ユーザー登録に失敗しました']);
-        }
+        // 自動的にログインさせる
+        $this->guard()->login($user);
+
+        return redirect($this->redirectPath());
     }
 }

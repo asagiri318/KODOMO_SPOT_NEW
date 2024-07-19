@@ -52,4 +52,9 @@ class Spot extends Model
     {
         return $this->hasMany(SpotPhoto::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

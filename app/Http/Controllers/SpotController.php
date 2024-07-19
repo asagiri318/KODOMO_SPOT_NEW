@@ -8,6 +8,7 @@ use App\Models\SpotPhoto;
 use App\Models\Prefecture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Like;
 
 class SpotController extends Controller
 {
@@ -96,8 +97,14 @@ class SpotController extends Controller
         // ユーザーがお気に入り登録しているかどうかをチェック
         $isFavorited = Auth::check() && Auth::user()->favoriteSpots()->where('spot_id', $spot->id)->exists();
 
+        $spot = Spot::with('photos')->findOrFail($id);
+        // 「いいね」数を取得
+        $likeCount = Like::where('spot_id', $id)->count();
+        $isFavorited = Auth::check() ? Auth::user()->favorites()->where('spot_id', $id)->exists() : false;
+        $isLiked = Auth::check() ? Auth::user()->likes()->where('spot_id', $id)->exists() : false;
+
         // 詳細ページを表示
-        return view('spot.show', compact('spot', 'isFavorited'));
+        return view('spot.show', compact('spot', 'isFavorited', 'isLiked', 'likeCount'));
     }
 
     public function addToFavorites($id)
