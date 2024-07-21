@@ -94,7 +94,7 @@
             </div>
 
             <div>
-                <label for="password">パスワード</label>
+                <label for="password">パスワード（8文字以上）</label>
                 <input id="password" type="password" name="password" required autocomplete="current-password">
             </div>
 
