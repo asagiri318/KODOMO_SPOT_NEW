@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto mt-5 px-4">
-    <h1 class="text-3xl font-bold mb-4">みんなの共有スポット</h1>
+    <h1 class="text-3xl font-bold mb-4 dark:text-white">みんなの共有スポット</h1>
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         
         @if($spots->isEmpty())

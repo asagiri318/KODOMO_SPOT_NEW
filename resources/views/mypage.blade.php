@@ -69,7 +69,7 @@
     </div>
 
     <!-- スポット一覧の表示 -->
-      <h1 class="text-3xl font-bold mb-2">登録したスポット</h1>
+      <h1 class="text-3xl font-bold mb-2 dark:text-white">登録したスポット</h1>
       <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
           
           @if($spots->isEmpty())
