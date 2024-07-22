@@ -69,14 +69,15 @@
       </div>
 
     <!-- スポット一覧の表示 -->
+    <div class="container mt-2">
       <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">登録したスポット</h1>
-      <div class="flex justify-between mb-2">
-        <form method="GET" action="{{ route('mypage') }}" class="flex-grow">
-            <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded p-2">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">検索</button>
-        </form>  
-
-        <div class="ml-4">
+      <div class="flex justify-between mb-2 flex-nowrap">
+        <form method="GET" action="{{ route('mypage') }}" class="flex items-center space-x-2">
+            <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="rounded px-1 py-2">
+            <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded whitespace-nowrap">検索</button>
+        </form>
+    
+        <div class="ml-2 flex-shrink-0">
             <select name="sort" id="sort" class="border rounded py-2 px-2 text-xs text-left pr-8">
                 <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
                 <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
@@ -84,6 +85,9 @@
             </select>
         </div>
     </div>
+</div>
+
+    
 
       <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
           @if($spots->isEmpty())
