@@ -57,4 +57,10 @@ class Spot extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    // スコープ：いいねの数で並べ替え
+    public function scopeWithLikeCount($query)
+    {
+        return $query->withCount('likes');
+    }
 }

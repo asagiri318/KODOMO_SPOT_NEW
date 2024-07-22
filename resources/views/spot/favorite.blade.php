@@ -2,17 +2,25 @@
 
 @section('content')
 <div class="container mx-auto mt-5 px-4">
-    <h1 class="text-3xl font-bold mb-4 dark:text-white">お気に入り一覧</h1>
+    <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">お気に入り一覧</h1>
+    
+    <div class="flex justify-between mb-2">
+        <select name="sort" id="sort" class="border rounded py-2 px-4 text-xs text-left pr-8">
+            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
+            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
+            <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
+        </select>
+    </div> 
 
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div class="max-w-4xl mx-auto bg-white p-2 rounded-lg shadow-md">
         @if($favoriteSpots->isEmpty())
             <p>まだスポットが登録されていません。</p>
         @else
             <ul class="space-y-4">
                 @foreach($favoriteSpots as $spot)
-                <li class="mb-4 p-4 border rounded-md hover:bg-gray-100 transition cursor-pointer" onclick="location.href='{{ route('spot.show', $spot->id) }}'">
+                <li class="mb-4 p-2 border rounded-md hover:bg-gray-100 transition cursor-pointer" onclick="location.href='{{ route('spot.show', $spot->id) }}'">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 overflow-hidden mr-4">
+                        <div class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 overflow-hidden">
                             @if ($spot->photos->isNotEmpty())
                                 <img src="{{ asset($spot->photos->first()->photo_path) }}" alt="Spot Image" class="rounded-md h-full w-full object-cover">
                             @else
@@ -20,7 +28,7 @@
                             @endif
                         </div>
                         <div class="ml-4 sm:ml-8 flex-1">
-                            <h2 class="font-bold text-lg">{{ $spot->title }}</h2>
+                            <h2 class="text-lg">{{ Str::limit($spot->title, 20)}}</h2>
                             <p class="text-sm text-gray-500 mt-1">
                                 @if ($spot->prefecture)
                                     {{ $spot->prefecture }} {{ $spot->city }}
@@ -47,4 +55,16 @@
         @endif
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('sort').addEventListener('change', function() {
+            let selectedOption = this.value;
+            let url = new URL(window.location.href);
+            url.searchParams.set('sort', selectedOption);
+            window.location.href = url.toString();
+        });
+    });
+</script>
+
 @endsection

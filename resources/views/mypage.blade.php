@@ -9,47 +9,48 @@
 @endif
 
 <section class="text-gray-600 body-font min-h-screen">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-      <div class="flex flex-col sm:flex-row items-center sm:items-start">
-        <div class="sm:w-1/3 text-center sm:pr-8 sm:py-8">
-          <div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400 cursor-pointer mb-2" onclick="openModal()">
-            @if ($user->photo)
-              <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-20 w-20 object-cover">
-            @else
-              <span class="text-3xl">+</span>
-            @endif
-          </div>
-          <div class="flex flex-col items-center text-center justify-center mt-4 sm:mt-0 sm:ml-2">
+  <div class="container px-4 mt-6 mx-auto">
+    <div class="bg-white p-4 rounded-lg shadow-md mb-4 flex flex-col items-center">
+
+        <div class="flex justify-center items-center">
+                <div class="w-1/3 text-center pr-4 py-2">
+                  <div class="w-20 h-20 rounded-full inline-flex bg-gray-200 text-gray-400 cursor-pointer" onclick="openModal()">
+                    @if ($user->photo)
+                      <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-20 w-20 object-cover">
+                    @else
+                      <span class="text-3xl">+</span>
+                    @endif
+                  </div>
+                </div>
+        <div class="flex flex-col items-center text-center justify-center ml-4">
             <a href="{{ route('profile.edit') }}" class="text-gray-900 hover:text-indigo-500 relative">
-                <h2 class="font-medium title-font text-gray-900 text-lg truncate w-40 sm:w-60">
+                <h2 class="font-medium title-font text-gray-900 text-2xl truncate w-40 sm:w-60">
                     {{ $user->nickname }} <!-- ニックネームを表示 -->
                 </h2>
             </a>
-            <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
-        </div>     
-        </div>
-        <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
-          <p class="leading-relaxed text-lg mb-4">
-            @if ($user->prefecture)
-                @php
-                    $prefectureId = $user->prefecture;
-                    $prefectureName = config('prefectures')[$prefectureId - 1]['name'] ?? null;
-                @endphp
-                @if ($prefectureName)
-                    住所：{{ $prefectureName }} <!-- 都道府県の名前 -->
+            <p class="leading-relaxed text-lg text-sm">
+                @if ($user->prefecture)
+                    @php
+                        $prefectureId = $user->prefecture;
+                        $prefectureName = config('prefectures')[$prefectureId - 1]['name'] ?? null;
+                    @endphp
+                    @if ($prefectureName)
+                        住所：{{ $prefectureName }} <!-- 都道府県の名前 -->
+                    @else
+                        住所：未設定 <!-- 対応する都道府県が見つからない場合の表示 -->
+                    @endif
+                    @if ($user->city)
+                        &nbsp;{{ $user->city }} <!-- 市区町村 -->
+                    @endif
                 @else
-                    住所：未設定 <!-- 対応する都道府県が見つからない場合の表示 -->
+                    住所：未設定 <!-- 都道府県が設定されていない場合の表示 -->
                 @endif
-                @if ($user->city)
-                    &nbsp;{{ $user->city }} <!-- 市区町村 -->
-                @endif
-            @else
-                住所：未設定 <!-- 都道府県が設定されていない場合の表示 -->
-            @endif
-        </p>                   
-        
-          <p class="leading-relaxed text-lg mb-4">
+            </p>
+        </div> 
+      
+        </div>
+        <div class="sm:w-full border-gray-200 border-t pt-4 sm:mt-0 text-center">               
+        <p class="leading-relaxed text-lg mb-2">
             @if ($children->isNotEmpty())
                 お子様の年齢：
                 @foreach ($children as $child)
@@ -59,19 +60,32 @@
                 お子様の情報が登録されていません。
             @endif
           </p>
-          <div class="mb-4">
-            <label for="introduction" class="text-sm font-medium border-gray-200 text-gray-700">自己紹介</label>
-            <p class="mt-1 p-2">{{ $user->introduction ?? '未設定' }}</p>
+          
+          <div class="mb-2">
+            <label for="introduction" class="font-medium border-gray-400 text-gray-700">【自己紹介】</label>
+            <p class="mt-1 p-1">{!! nl2br(e($user->introduction ?? '未設定')) !!}</p>
         </div>
-        
         </div>
       </div>
-    </div>
 
     <!-- スポット一覧の表示 -->
-      <h1 class="text-3xl font-bold mb-2 dark:text-white">登録したスポット</h1>
-      <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          
+      <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">登録したスポット</h1>
+      <div class="flex justify-between mb-2">
+        <form method="GET" action="{{ route('mypage') }}" class="flex-grow">
+            <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded p-2">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">検索</button>
+        </form>  
+
+        <div class="ml-4">
+            <select name="sort" id="sort" class="border rounded py-2 px-2 text-xs text-left pr-8">
+                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
+                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
+                <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
+            </select>
+        </div>
+    </div>
+
+      <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
           @if($spots->isEmpty())
               <p>登録されたスポットはありません。</p>
           @else
@@ -120,6 +134,15 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('sort').addEventListener('change', function() {
+        let selectedOption = this.value;
+        let url = new URL(window.location.href);
+        url.searchParams.set('sort', selectedOption);
+        window.location.href = url.toString();
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     var nicknameElement = document.querySelector('.nickname');
     var nicknameWidth = nicknameElement.offsetWidth;

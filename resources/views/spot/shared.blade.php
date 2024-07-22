@@ -1,10 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-5 px-4">
-    <h1 class="text-3xl font-bold mb-4 dark:text-white">みんなの共有スポット</h1>
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        
+<div class="container mx-auto mt-5 px-3">
+    <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">みんなの共有スポット</h1>
+    
+  <div class="flex justify-between mb-2">
+    <form method="GET" action="{{ route('shared') }}" class="flex-grow">
+        <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded p-2">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">検索</button>
+    </form>  
+
+    <div class="ml-4">
+        <select name="sort" id="sort" class="border rounded py-2 px-4 text-xs text-left pr-8">
+            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
+            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
+            <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
+        </select>
+    </div>    
+  </div>
+    
+    <div class="px-4 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
         @if($spots->isEmpty())
             <p>まだスポットが登録されていません。</p>
         @else
@@ -46,6 +61,15 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('sort').addEventListener('change', function() {
+        let selectedOption = this.value;
+        let url = new URL(window.location.href);
+        url.searchParams.set('sort', selectedOption);
+        window.location.href = url.toString();
+    });
+});
+
     document.addEventListener('DOMContentLoaded', (event) => {
         const likeButtons = document.querySelectorAll('.like-button');
 

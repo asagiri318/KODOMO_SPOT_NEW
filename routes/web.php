@@ -19,6 +19,8 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SpotPhotoController;
 use App\Http\Controllers\LikeController;
 
+Route::get('/shared', [SpotController::class, 'shared'])->name('shared');
+
 Route::post('/spots/{spot}/like', [LikeController::class, 'toggleLike'])->name('spot.like');
 Route::get('/spots/{spot}/like-count', [LikeController::class, 'likeCount'])->name('spot.like-count');
 Route::post('/spots/{spotId}/like', [LikeController::class, 'toggleLike'])->name('spot.toggleLike');

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-5 px-4">
+<div class="container mx-auto mt-5 px-3">
     <h1 class="dark:text-white text-3xl font-bold text-center mb-5">スポット詳細</h1>
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         @if (session('success'))
@@ -32,9 +32,9 @@
                 </a>
             </h2>
         </div>
-        <p class="mb-2">お子様の年齢（訪れた日）: {{ $spot->child_age_range }}</p>
+        <p class="mb-3">お子様の年齢（訪れた日）: {{ $spot->child_age_range }}</p>
 
-        <p class="mb-4">{!! nl2br(e($spot->description)) !!}</p>
+        <p class="mb-4">【内容】<br>{!! nl2br(e($spot->description)) !!}</p>
 
         <!-- 画像の表示 -->
         <div class="mb-4 flex flex-wrap">

@@ -84,7 +84,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main class="flex-grow mt-16 sm:mt-0" style="padding-bottom: 100px;">
+        <main class="flex-grow sm:mt-0" style="padding-bottom: 100px;">
             @yield('content')
         </main>
     </div>

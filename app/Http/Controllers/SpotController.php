@@ -210,18 +210,66 @@ class SpotController extends Controller
         return redirect()->route('mypage')->with('status', 'スポットが削除されました');
     }
 
-    public function favorite()
+    public function favorite(Request $request)
     {
         $user = Auth::user();
-        $favoriteSpots = $user->favoriteSpots()->get(); // ユーザーのお気に入りスポットを取得
 
-        return view('spot.favorite', compact('favoriteSpots'));
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'ログインしてください');
+        }
+
+        // お気に入りスポットをクエリビルダーで初期化
+        $favoriteSpots = $user->favoriteSpots();
+
+        // 並べ替えの条件
+        $sort = $request->input('sort', 'newest');
+        switch ($sort) {
+            case 'newest':
+                $favoriteSpots = $favoriteSpots->orderBy('date_visited', 'desc');
+                break;
+            case 'oldest':
+                $favoriteSpots = $favoriteSpots->orderBy('date_visited', 'asc');
+                break;
+            case 'most_liked':
+                $favoriteSpots = $favoriteSpots->withLikeCount()->orderBy('likes_count', 'desc');
+                break;
+        }
+
+        $favoriteSpots = $favoriteSpots->get(); // クエリを実行して結果を取得
+
+        return view('spot.favorite', compact('favoriteSpots')); // ビューに結果を渡す
     }
 
-    public function shared()
+    public function shared(Request $request)
     {
-        $spots = Spot::all(); // すべてのスポットを取得
+        $spots = Spot::query(); // クエリビルダーを初期化
 
-        return view('spot.shared', compact('spots'));
+        $query = $request->input('query'); // リクエストからクエリパラメータを取得
+        $sort = $request->input('sort', 'newest');
+
+        if ($query) {
+            $keywords = explode(' ', $query); // クエリ文字列をスペースで分割
+            foreach ($keywords as $keyword) {
+                $spots = $spots->where(function ($q) use ($keyword) {
+                    $q->where('title', 'like', "%{$keyword}%")
+                        ->orWhere('description', 'like', "%{$keyword}%")
+                        ->orWhere('city', 'like', "%{$keyword}%")
+                        ->orWhere('prefecture', 'like', "%{$keyword}%");
+                });
+            }
+        }
+
+        // 並べ替えの条件
+        if ($sort === 'newest') {
+            $spots = $spots->orderBy('date_visited', 'desc');
+        } elseif ($sort === 'oldest') {
+            $spots = $spots->orderBy('date_visited', 'asc');
+        } elseif ($sort === 'most_liked') {
+            $spots = $spots->withCount('likes')->orderBy('likes_count', 'desc');
+        }
+
+        $spots = $spots->get(); // クエリを実行して結果を取得
+
+        return view('spot.shared', compact('spots')); // ビューに結果を渡す
     }
 }
