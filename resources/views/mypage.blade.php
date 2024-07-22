@@ -69,7 +69,6 @@
       </div>
 
     <!-- スポット一覧の表示 -->
-    <div class="container mt-2">
       <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">登録したスポット</h1>
       <div class="flex justify-between mb-2 flex-nowrap">
         <form method="GET" action="{{ route('mypage') }}" class="flex items-center space-x-2">
@@ -85,9 +84,6 @@
             </select>
         </div>
     </div>
-</div>
-
-    
 
       <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
           @if($spots->isEmpty())

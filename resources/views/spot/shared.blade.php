@@ -5,13 +5,13 @@
     <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">みんなの共有スポット</h1>
     
   <div class="flex justify-between mb-2">
-    <form method="GET" action="{{ route('shared') }}" class="flex-grow">
-        <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded p-2">
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">検索</button>
+    <form method="GET" action="{{ route('shared') }}" class="flex items-center space-x-2">
+        <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded px-1 py-2">
+        <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded whitespace-nowrap">検索</button>
     </form>  
 
     <div class="ml-4">
-        <select name="sort" id="sort" class="border rounded py-2 px-4 text-xs text-left pr-8">
+        <select name="sort" id="sort" class="border rounded py-2 px-4 text-sm text-left pr-8">
             <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
             <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
             <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
