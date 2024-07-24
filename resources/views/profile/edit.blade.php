@@ -1,8 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-5">
-    <h1 class="dark:text-white text-3xl font-bold text-center mb-5">プロフィール編集</h1>
+
+<style>
+    .bg-profile {
+        background-image: url('{{ asset('images/profile-bg.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+        background-attachment: fixed; /* スクロール時に背景画像が固定される */
+        margin: 0; /* 上下の余白をリセット */
+    }
+    </style>
+
+<div class="bg-profile pb-4">
+
+    <div class="container mx-auto px-10">
+        <h1 class="text-out text-4xl font-bold text-center mb-3 pt-3">プロフィール編集</h1>
     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         @csrf
         @method('PATCH')
@@ -89,6 +103,7 @@
         @csrf
         @method('DELETE')
     </form>
+</div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

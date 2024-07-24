@@ -3,32 +3,41 @@
 @section('content')
 <!-- 登録完了時のアラート -->
 @if(session('status'))
-    <div class="alert alert-success">
+    <div class="mt-2 dark:text-white alert alert-success">
         {{ session('status') }}
     </div>
 @endif
 
 <section class="text-gray-600 body-font min-h-screen">
-  <div class="container px-4 mt-6 mx-auto">
-    <div class="bg-white p-4 rounded-lg shadow-md mb-4 flex flex-col items-center">
+<!-- プロフィール画像の上部にバナー画像を追加 -->
+<div class="relative">
+    <img src="{{ asset('images/profile-banner.jpg') }}" alt="プロフィールバナー" class="w-full object-cover mb-2">
+    <div class="absolute top-0 left-0 right-0 p-4 text-center text-white">
+        <div class="p-6 rounded-lg">
+            <h1 class="text-[5vw] font-bold font-kalnia">今日はどこに行きましたか？</h1>
+        </div>
+    </div>
+</div>
 
+<div class="container px-4 mt-6 mx-auto">
+    <div class="bg-white p-4 rounded-lg shadow-md mb-4 flex flex-col items-center">
         <div class="flex justify-center items-center">
                 <div class="w-1/3 text-center pr-4 py-2">
                   <div class="w-20 h-20 rounded-full inline-flex bg-gray-200 text-gray-400 cursor-pointer" onclick="openModal()">
                     @if ($user->photo)
-                      <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-20 w-20 object-cover">
+                      <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-full w-full object-cover">
                     @else
                       <span class="text-3xl">+</span>
                     @endif
                   </div>
                 </div>
         <div class="flex flex-col items-center text-center justify-center ml-4">
-            <a href="{{ route('profile.edit') }}" class="text-gray-900 hover:text-indigo-500 relative">
-                <h2 class="font-medium title-font text-gray-900 text-2xl truncate w-40 sm:w-60">
+            <a href="{{ route('profile.edit') }}" class="relative">
+                <h2 class="font-medium title-font text-blue-600 text-2xl truncate hover:text-indigo-200 w-40 sm:w-60">
                     {{ $user->nickname }} <!-- ニックネームを表示 -->
                 </h2>
             </a>
-            <p class="leading-relaxed text-lg text-sm">
+            <p class="leading-relaxed text-base">
                 @if ($user->prefecture)
                     @php
                         $prefectureId = $user->prefecture;
@@ -67,9 +76,17 @@
         </div>
         </div>
       </div>
+    </div>
 
     <!-- スポット一覧の表示 -->
-      <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">登録したスポット</h1>
+    <div class="relative">
+        <img src="{{ asset('images/spot-chart.jpg') }}" alt="プロフィールバナー" class="w-full object-cover mb-2">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h1 class="text-[9vw] font-bold text-outline">登録スポット一覧</h1>
+        </div>
+    </div>    
+
+    <div class="container px-4 mt-6 mx-auto">
       <div class="flex justify-between mb-2 flex-nowrap">
         <form method="GET" action="{{ route('mypage') }}" class="flex items-center space-x-2">
             <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="rounded px-1 py-2">
@@ -162,4 +179,5 @@ function closeModal() {
     window.location.href = '{{ route("mypage", $user->id) }}'; // マイページに戻る
 }
 </script>
+
 @endsection

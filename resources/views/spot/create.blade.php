@@ -1,8 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-5">
-    <h1 class="dark:text-white text-3xl font-bold text-center mb-5">新規スポット登録</h1>
+
+<style>
+    .bg-spot {
+        background-image: url('{{ asset('images/spot-bg.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+        background-attachment: fixed; /* スクロール時に背景画像が固定される */
+        margin: 0; /* 上下の余白をリセット */
+    }
+    </style>
+
+<div class="bg-spot pb-4">
+
+    <div class="container mx-auto px-10">
+        <h1 class="text-out text-4xl font-bold text-center mb-3 pt-3">新規スポット登録</h1>
     <form method="POST" action="{{ route('spot.store') }}" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
         @csrf
         <input type="hidden" name="user_id" value="{{ Auth::id() }}">
@@ -74,6 +88,7 @@
             <button type="submit" class="btn-blue">登録</button>
         </div>
     </form>
+</div>
 </div>
 
 @if(session('status'))

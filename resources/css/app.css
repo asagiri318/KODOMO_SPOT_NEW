@@ -3,7 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .btn-blue {
     @apply bg-blue-500 text-white font-bold py-2 px-3 rounded;
 }
@@ -32,3 +31,16 @@
     @apply bg-orange-500 text-white font-bold py-1 px-1 rounded;
 }
 
+        .text-outline {
+            color: white;
+            -webkit-text-stroke: 1.3px rgb(17, 255, 0); /* Safari */
+            text-stroke: 1.3px rgb(17, 255, 0); /* その他のブラウザ用 */
+            font-family: 'Quicksand', sans-serif; /* カスタムフォントを適用 */
+        }
+
+        .text-out {
+            color: white;
+            -webkit-text-stroke: 1.3px black; /* Safari */
+            text-stroke: 1.3px black; /* その他のブラウザ用 */
+            font-family: 'Quicksand', sans-serif; /* カスタムフォントを適用 */
+        }
