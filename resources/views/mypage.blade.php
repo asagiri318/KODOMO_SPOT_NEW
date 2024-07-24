@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<div class="container px-4 mt-6 mx-auto">
+<div class="container px-4 mt-4 mx-auto">
     <div class="bg-white p-4 rounded-lg shadow-md mb-4 flex flex-col items-center">
         <div class="flex justify-center items-center">
                 <div class="w-1/3 text-center pr-4 py-2">
