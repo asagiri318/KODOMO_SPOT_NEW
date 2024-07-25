@@ -1,9 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto mt-5 px-4">
-    <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">お気に入り一覧</h1>
-    
+
+<style>
+    .bg-spotfv {
+        background-image: url('{{ asset('images/profile-fvbg.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+        background-attachment: fixed; /* スクロール時に背景画像が固定される */
+        margin: 0; /* 上下の余白をリセット */
+    }
+    </style>
+
+<div class="bg-spotfv pb-4">
+    <div class="container mx-auto px-10 pb-90">
+        <h1 class="text-3xl font-bold mb-3 pt-3 dark:text-white text-center">お気に入り一覧</h1>
     <div class="flex justify-between mb-2">
         <select name="sort" id="sort" class="border rounded py-2 px-4 text-xs text-left pr-8">
             <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
@@ -28,7 +40,7 @@
                             @endif
                         </div>
                         <div class="ml-4 sm:ml-8 flex-1">
-                            <h2 class="text-lg">{{ Str::limit($spot->title, 20)}}</h2>
+                            <h2 class="text-lg">{{ Str::limit($spot->title, 15)}}</h2>
                             <p class="text-sm text-gray-500 mt-1">
                                 @if ($spot->prefecture)
                                     {{ $spot->prefecture }} {{ $spot->city }}
@@ -54,6 +66,7 @@
             </ul>
         @endif
     </div>
+</div>
 </div>
 
 <script>

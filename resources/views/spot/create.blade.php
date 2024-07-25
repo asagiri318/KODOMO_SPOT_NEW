@@ -13,7 +13,7 @@
     }
     </style>
 
-<div class="bg-spot pb-4">
+<div class="bg-spot pb-40">
 
     <div class="container mx-auto px-10">
         <h1 class="text-out text-4xl font-bold text-center mb-3 pt-3">新規スポット登録</h1>

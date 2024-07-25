@@ -27,7 +27,7 @@
                 @endif
             </div>
             <h2 class="font-medium title-font text-gray-900 text-lg ml-4">
-                <a href="{{ route('user.profile', $spot->user->id) }}" class="text-gray-900 hover:text-indigo-500">
+                <a href="{{ route('user.profile', $spot->user->id) }}" class="text-blue-600 hover:text-indigo-200">
                     {{ $spot->user->nickname }} さんの投稿
                 </a>
             </h2>
@@ -39,9 +39,8 @@
         <!-- 画像の表示 -->
         <div class="mb-4 flex flex-wrap">
             @foreach($spot->photos as $index => $spotPhoto)
-                <div class="relative group w-1/3 p-2"> <!-- 横並びにするために幅を1/3に設定 -->
-                    <img src="{{ asset($spotPhoto->photo_path) }}" alt="{{ $spot->title }}" class="w-full h-full transition duration-300 transform group-hover:scale-110 cursor-pointer object-cover rounded-md"
-                         onclick="toggleModal('{{ asset($spotPhoto->photo_path) }}', '{{ $spot->title }}')">
+                <div class="relative group w-1/3 p-2 cursor-pointer" onclick="toggleModal('{{ asset($spotPhoto->photo_path) }}')"> <!-- 横並びにするために幅を1/3に設定 -->
+                    <img src="{{ asset($spotPhoto->photo_path) }}" alt="{{ $spot->title }}" class="w-full h-full transition duration-300 transform group-hover:scale-110 object-cover rounded-md">
                 </div>
             @endforeach
         </div>
@@ -81,15 +80,15 @@
 </div>
 
 <!-- モーダルの定義 -->
-<div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
-    <div class="bg-white rounded-lg p-8 max-w-3xl">
-        <img id="modalImage" src="" alt="" class="rounded-lg shadow-md cursor-pointer" onclick="toggleModal()">
+<div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center hidden" onclick="toggleModal()">
+    <div class="bg-white rounded-lg p-8 max-w-3xl relative">
+        <img id="modalImage" src="" alt="" class="rounded-lg shadow-md cursor-pointer" onclick="toggleModal(); event.stopPropagation();">
     </div>
 </div>
 
 <!-- JavaScript の追加 -->
 <script>
-    function toggleModal(imageUrl) {
+    function toggleModal(imageUrl = '') {
         const modal = document.getElementById('modal');
         const modalImage = document.getElementById('modalImage');
         

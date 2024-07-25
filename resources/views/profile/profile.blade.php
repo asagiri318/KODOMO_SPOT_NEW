@@ -2,25 +2,24 @@
 
 @section('content')
 <section class="text-gray-600 body-font min-h-screen">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="bg-white p-6 rounded-lg shadow-md">
+
+    <h2 class="text-center text-2xl font-bold mt-4">
+      {{ $user->nickname }}
+    </h2>
+
+  <div class="container px-5 py-4 mx-auto">
+    <div class="bg-white rounded-lg shadow-md">
       <div class="flex flex-col sm:flex-row items-center sm:items-start">
-        <div class="sm:w-1/3 text-center sm:pr-8 sm:py-8">
-          <div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
+        <div class="w-1/3 text-center py-2">
+          <div class="w-20 h-20 rounded-full inline-flex bg-gray-200 text-gray-400 cursor-pointer" onclick="openModal()" data-original-url="{{ url()->current() }}">
             @if ($user->photo)
-              <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-20 w-20 object-cover">
+              <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-full w-full object-cover">
             @else
               <span class="text-3xl">+</span>
             @endif
           </div>
-          <div class="flex flex-col items-center text-center justify-center mt-4 sm:mt-0 sm:ml-4">
-            <h2 class="font-medium title-font text-gray-900 text-lg">
-              {{ $user->nickname }}
-            </h2>
-            <div class="w-12 h-1 bg-indigo-500 rounded mt-2 mb-4"></div>
-          </div>
         </div>
-        <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
+        <div class="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t pt-4 sm:mt-0 text-center sm:text-left">
           <p class="leading-relaxed text-lg mb-4">
             @if ($user->prefecture)
                 @php
@@ -58,32 +57,92 @@
     </div>
 
     <!-- スポット一覧の表示 -->
-    <div class="mt-10">
-      <h2 class="text-2xl font-bold mb-4">登録したスポット</h2>
-      @if($spots->isEmpty())
-          <p>登録されたスポットはありません。</p>
-      @else
-          <ul>
-              @foreach($spots as $spot)
-                  <li class="mb-4">
-                      <div class="flex justify-between items-center">
-                          <span>
-                              ・{{ $spot->title }}
-                              <span class="text-sm text-gray-500">&nbsp;{{ $spot->prefecture }}&nbsp;{{ $spot->city }}</span>
-                              <span class="text-sm text-yellow-500">
-                                  @for ($i = 0; $i < $spot->rating; $i++)
-                                      ☆
-                                  @endfor
-                              </span>
-                          </span>
-                          <a href="{{ route('spot.show', $spot->id) }}" class="btn-blue">詳細を表示</a>
+    <div class="mt-4">
+      <h2 class="text-center text-2xl font-bold mb-3">
+        {{ $user->nickname }}さんの登録スポット</h2>
+      <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
+        @if($spots->isEmpty())
+            <p>登録されたスポットはありません。</p>
+        @else
+            <ul class="space-y-4">
+                @foreach($spots as $spot)
+                <li class="p-2 border hover:bg-gray-100 transition cursor-pointer" onclick="location.href='{{ route('spot.show', $spot->id) }}'">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 w-20 h-20 sm:w-32 sm:h-32 overflow-hidden mr-4">
+                            @if ($spot->photos->isNotEmpty())
+                                <img src="{{ asset($spot->photos->first()->photo_path) }}" alt="Spot Image" class="rounded-md h-full w-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 rounded-md">No image</div>
+                            @endif
+                        </div>
+                        <div class="ml-1 sm:ml-8 flex-1">
+                            <h2 class="font-bold">
+                                {{ Str::limit($spot->title, 23)}}
+                            </h2>
+                            <p class="text-sm text-gray-500 mt-1">
+                                @if ($spot->prefecture)
+                                    {{ $spot->prefecture }} {{ $spot->city }}
+                                @else
+                                    {{ $spot->city }}
+                                @endif
+                            </p>
+                             <p class="text-sm text-gray-500 mt-1">
+                              登録日: {{ \Carbon\Carbon::parse($spot->date_visited)->format('Y年m月d日') }}
+                          </p>
                       </div>
-                  </li>
-              @endforeach
-          </ul>
-      @endif
+                    </div>
+                </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
-
-  </div>
+</div>
+</div>
 </section>
+
+<!-- モーダルの実装 -->
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+  <div class="bg-white rounded-lg p-6 relative">
+    <button onclick="closeModal()" class="text-right mb-4">✖️</button>
+    <img id="modalImage" src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-lg cursor-pointer" onclick="closeModal()">
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('sort').addEventListener('change', function() {
+      let selectedOption = this.value;
+      let url = new URL(window.location.href);
+      url.searchParams.set('sort', selectedOption);
+      window.location.href = url.toString();
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var nicknameElement = document.querySelector('.nickname');
+  var nicknameWidth = nicknameElement.offsetWidth;
+
+  var underlineElement = nicknameElement.querySelector('.underline');
+  underlineElement.style.width = nicknameWidth + 'px';
+});
+
+function openModal() {
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal').classList.add('flex');
+  // `data-original-url` から元のページの URL を取得して保存
+  window.originalUrl = event.currentTarget.getAttribute('data-original-url');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal').classList.remove('flex');
+  // 保存した元のページの URL にリダイレクト
+  if (window.originalUrl) {
+    window.location.href = window.originalUrl;
+  } else {
+    window.location.href = '{{ route("mypage") }}'; // デフォルトでマイページに戻る
+  }
+}
+
+</script>
 @endsection
