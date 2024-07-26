@@ -73,13 +73,16 @@
             <div id="photo-fields" class="mb-4">
                 <label for="photos" class="block text-sm font-medium text-gray-700 mb-1">写真 (最大3つ)</label>
                 @foreach($spot->photos as $photo)
-                    <div class="photo-input flex items-center mb-2" data-photo-id="{{ $photo->id }}">
-                        <input type="file" name="photos[]" class="mt-1 block border border-gray-300 rounded-md shadow-sm">
-                        <img src="{{ $photo->photo_path }}" class="h-10 w-20 rounded-lg mr-2">
-                        <button type="button" class="ml-2 btn-red remove-photo-btn" data-photo-id="{{ $photo->id }}">削除</button>
+                    <div class="photo-input flex items-center justify-between mb-2" data-photo-id="{{ $photo->id }}">
+                        <input type="file" name="photos[]" class="mt-1 text-xs flex-grow border border-gray-300 rounded-md shadow-sm">
+                        <div class="flex items-center space-x-2 px-1">
+                            <img src="{{ $photo->photo_path }}" class="px-1 h-10 w-16 rounded-lg">
+                            <button type="button" class="text-xs ml-2 btn-red remove-photo-btn" data-photo-id="{{ $photo->id }}">削除</button>
+                        </div>
                     </div>
                 @endforeach
             </div>
+            
             <p id="photo-error" class="text-red-500 text-xs mt-1" style="display: none;">写真は最大3つまで選択できます。</p>
             <button type="button" id="add-photo-btn" class="btn-blue mt-1 mb-4">写真の追加</button>
 
