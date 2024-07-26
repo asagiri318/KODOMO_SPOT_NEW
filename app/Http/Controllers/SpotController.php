@@ -9,9 +9,24 @@ use App\Models\Prefecture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Like;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver;
 
 class SpotController extends Controller
 {
+    private function resizeImage($photo, $width, $height)
+    {
+        // Imagick ドライバーを指定して ImageManager のインスタンスを作成
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read($photo->getPathname());
+        $image->resize($width, $height, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        return $image;
+    }
+
     // バリデーションルールを定義するメソッド
     private function validationRules()
     {
@@ -66,8 +81,14 @@ class SpotController extends Controller
         if ($request->hasFile('photos')) {
             $photoCounter = 1; // 画像カウンタを初期化
             foreach ($request->file('photos') as $photo) {
+                // 画像をリサイズ
+                $resizedImage = $this->resizeImage($photo, 800, 600);
+
                 // ファイル名を生成
                 $filename = $spot->id .  '_' . $photoCounter . $photo->getClientOriginalExtension();
+
+                // リサイズした画像を指定のパスに保存する
+                $resizedImage->save(storage_path('app/public/photos/' . $filename));
 
                 // ファイルを指定のパスに保存する（publicディスクを使用）
                 $path = $photo->storeAs('public/photos', $filename);

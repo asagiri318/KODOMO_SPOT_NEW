@@ -15,7 +15,7 @@
 
 <div class="bg-spotfv pb-4">
     <div class="container mx-auto px-10 pb-90">
-        <h1 class="text-3xl font-bold mb-3 pt-3 dark:text-white text-center">お気に入り一覧</h1>
+        <h1 class="text-4xl font-bold mb-3 pt-3 text-center">お気に入り一覧</h1>
     <div class="flex justify-between mb-2">
         <select name="sort" id="sort" class="border rounded py-2 px-4 text-xs text-left pr-8">
             <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
