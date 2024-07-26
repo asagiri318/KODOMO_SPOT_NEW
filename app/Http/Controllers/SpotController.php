@@ -82,7 +82,7 @@ class SpotController extends Controller
             $photoCounter = 1; // 画像カウンタを初期化
             foreach ($request->file('photos') as $photo) {
                 // 画像をリサイズ
-                $resizedImage = $this->resizeImage($photo, 800, 600);
+                $resizedImage = $this->resizeImage($photo, 700, 400);
 
                 // ファイル名を生成
                 $filename = $spot->id .  '_' . $photoCounter . $photo->getClientOriginalExtension();
@@ -166,8 +166,6 @@ class SpotController extends Controller
     {
         // バリデーションルールを取得
         $rules = $this->validationRules();
-
-        // リクエストのバリデーション
         $request->validate($rules);
 
         // IDに該当するスポットを取得
@@ -185,6 +183,24 @@ class SpotController extends Controller
 
         // Spot モデルを保存
         $spot->save();
+
+        // 写真の削除処理
+        if ($request->has('delete_photos')) {
+            $deletedPhotos = explode(',', $request->input('delete_photos'));
+            foreach ($deletedPhotos as $photoId) {
+                $photo = SpotPhoto::find($photoId);
+                if ($photo) {
+                    // ストレージからファイルを削除
+                    $photoPath = storage_path('app/public/photos/' . $photo->photo_path);
+                    if (file_exists($photoPath)) {
+                        unlink($photoPath);
+                    }
+
+                    // データベースから写真レコードを削除
+                    $photo->delete();
+                }
+            }
+        }
 
         // 画像がアップロードされている場合は保存処理を行う
         if ($request->hasFile('photos')) {
@@ -212,6 +228,7 @@ class SpotController extends Controller
         // リダイレクトと共に成功メッセージを表示
         return redirect()->route('spot.show', $spot->id)->with('status', 'スポットが更新されました');
     }
+
 
     public function destroy($id)
     {

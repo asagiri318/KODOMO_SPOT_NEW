@@ -19,28 +19,29 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SpotPhotoController;
 use App\Http\Controllers\LikeController;
 
+// 共有スポットの表示
 Route::get('/shared', [SpotController::class, 'shared'])->name('shared');
+Route::get('/shared-spots', [SpotController::class, 'shared'])->name('spot.shared');
 
+// スポットに関連するルート
 Route::post('/spots/{spot}/like', [LikeController::class, 'toggleLike'])->name('spot.like');
 Route::get('/spots/{spot}/like-count', [LikeController::class, 'likeCount'])->name('spot.like-count');
 Route::post('/spots/{spotId}/like', [LikeController::class, 'toggleLike'])->name('spot.toggleLike');
 Route::get('/spots/{spotId}/like-count', [LikeController::class, 'likeCount'])->name('spot.likeCount');
 
-Route::delete('/spot-photos/{id}', [SpotPhotoController::class, 'destroy'])->name('spot-photos.destroy');
-
-Route::get('/shared-spots', [SpotController::class, 'shared'])->name('spot.shared');
-Route::get('/shared', [SpotController::class, 'shared'])->name('shared');
-
 Route::post('/spots/{id}/favorite', [SpotController::class, 'addToFavorites'])->name('spot.addToFavorites');
 Route::post('/spots/{id}/unfavorite', [FavoriteController::class, 'removeFromFavorites'])->name('favorites.remove');
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
+// 認証が必要なルート
 Route::middleware('auth')->group(function () {
+    // ユーザープロフィール
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.deletePhoto');
 
+    // スポット関連のルート
     Route::get('/spots/create', [SpotController::class, 'create'])->name('spot.create');
     Route::post('/spots', [SpotController::class, 'store'])->name('spot.store');
     Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spot.show');
@@ -48,6 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/spots/{id}/update', [SpotController::class, 'update'])->name('spot.update');
     Route::delete('/spots/{id}/delete', [SpotController::class, 'destroy'])->name('spot.destroy');
 
+    // SpotPhotoController に関連するルート
+    Route::delete('/spotphotos/{photo}', [SpotPhotoController::class, 'destroy'])->name('spotphoto.destroy');
+    Route::post('/spotphotos', [SpotPhotoController::class, 'store'])->name('spotphotos.store');
+
+    // メール確認、パスワード確認、ログアウト
     Route::get('/verify-email', [EmailVerificationPromptController::class, '__invoke'])->name('verification.notice');
     Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
@@ -59,13 +65,16 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+    // マイページ関連
     Route::get('/', [UserController::class, 'index'])->name('mypage');
     Route::get('/spot/favorite', [SpotController::class, 'favorite'])->name('spot.favorite');
-    Route::get('/mypage', [UserController::class, 'index'])->name('mypage'); // UserController の index メソッドを使用する
+    Route::get('/mypage', [UserController::class, 'index'])->name('mypage');
 
+    // ユーザーのプロフィール
     Route::get('/user/{id}', [UserController::class, 'profile'])->name('user.profile');
 });
 
+// ゲストユーザー用のルート
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register', [RegisteredUserController::class, 'store']);
@@ -81,4 +90,5 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 });
 
+// Ajax のルート
 Route::post('/ajax/cities', [AjaxController::class, 'getCities'])->name('ajax.cities');

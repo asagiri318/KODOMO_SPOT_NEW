@@ -31,38 +31,4 @@ class SpotPhotoController extends Controller
 
         return redirect()->back()->with('success', '写真がアップロードされました');
     }
-
-    /**
-     * 写真を更新する
-     */
-    public function update(Request $request, SpotPhoto $photo)
-    {
-        $request->validate([
-            'photo' => 'required|image|max:2048', // 画像の最大サイズは2048KB (2MB)
-        ]);
-
-        // 既存の写真を削除
-        Storage::disk('public')->delete($photo->photo_path);
-
-        // 新しい写真を保存
-        $file = $request->file('photo');
-        $filename = hash('sha256', $file->getClientOriginalName() . time()) . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('public/photos', $filename);
-        $photoPath = str_replace('public/', '', $path);
-
-        $photo->update(['photo_path' => $photoPath]);
-
-        return redirect()->back()->with('success', '写真が更新されました');
-    }
-
-    /**
-     * 写真を削除する
-     */
-    public function destroy(SpotPhoto $photo)
-    {
-        Storage::disk('public')->delete($photo->photo_path);
-        $photo->delete();
-
-        return redirect()->back()->with('success', '写真が削除されました');
-    }
 }

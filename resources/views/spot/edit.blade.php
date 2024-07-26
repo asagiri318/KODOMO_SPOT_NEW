@@ -15,7 +15,7 @@
             </div>
         @endif
 
-        <form action="{{ route('spot.update', $spot->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="spot-form" action="{{ route('spot.update', $spot->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -68,21 +68,24 @@
                         </option>
                     @endfor
                 </select>
-            </div>            
+            </div>       
 
             <div id="photo-fields" class="mb-4">
                 <label for="photos" class="block text-sm font-medium text-gray-700 mb-1">写真 (最大3つ)</label>
                 @foreach($spot->photos as $photo)
-                    <div class="photo-input flex items-center mb-2">
-                        <input type="file" name="photos[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
-                        <button type="button" class="ml-2 btn-red remove-photo-btn">削除</button>
+                    <div class="photo-input flex items-center mb-2" data-photo-id="{{ $photo->id }}">
+                        <input type="file" name="photos[]" class="mt-1 block border border-gray-300 rounded-md shadow-sm">
+                        <img src="{{ $photo->photo_path }}" class="h-10 w-20 rounded-lg mr-2">
+                        <button type="button" class="ml-2 btn-red remove-photo-btn" data-photo-id="{{ $photo->id }}">削除</button>
                     </div>
-                    <img src="{{ asset($photo->photo_path) }}" class="h-10 w-20 rounded-lg mb-2 mr-2">
                 @endforeach
             </div>
             <p id="photo-error" class="text-red-500 text-xs mt-1" style="display: none;">写真は最大3つまで選択できます。</p>
             <button type="button" id="add-photo-btn" class="btn-blue mt-1 mb-4">写真の追加</button>
-            
+
+            <!-- 隠しフィールド：削除する写真のIDを格納 -->
+            <input type="hidden" id="deleted-photos" name="delete_photos" value="">
+
             <div class="mb-4">
                 <label for="spot_url" class="block text-gray-700">スポットのURL</label>
                 <input type="text" name="spot_url" id="spot_url" value="{{ old('spot_url', $spot->spot_url) }}" class="w-full p-2 border border-gray-300 rounded">
@@ -97,7 +100,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
     let photoFieldsContainer = document.getElementById('photo-fields');
     let addPhotoBtn = document.getElementById('add-photo-btn');
     let maxPhotos = 3;
@@ -127,11 +130,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function removePhotoInput(event) {
-        event.target.parentElement.remove();
+        let btn = event.target;
+        let photoDiv = btn.parentElement;
+        let photoId = photoDiv.getAttribute('data-photo-id');
+
+        // 隠しフィールドに削除対象の写真IDを追加
+        if (photoId) {
+            let deletedPhotosField = document.getElementById('deleted-photos');
+            let currentDeletedPhotos = deletedPhotosField.value ? deletedPhotosField.value.split(',') : [];
+            if (!currentDeletedPhotos.includes(photoId)) {
+                currentDeletedPhotos.push(photoId);
+                deletedPhotosField.value = currentDeletedPhotos.join(','); // 更新
+            }
+        }
+
+        photoDiv.remove();
         document.getElementById('photo-error').style.display = 'none';
     }
 
     updateRemovePhotoBtns();
 });
 </script>
-@endsection
+    @endsection
