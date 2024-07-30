@@ -10,6 +10,7 @@
         background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
         background-attachment: fixed; /* スクロール時に背景画像が固定される */
         margin: 0; /* 上下の余白をリセット */
+        height: 100vh; /* 背景画像がページ全体を覆うようにする */
     }
     </style>
 

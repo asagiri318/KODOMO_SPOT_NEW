@@ -17,7 +17,7 @@
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
-        <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 fixed top-0 left-0 right-0 z-10">
+        <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 fixed top-0 left-0 right-0 z-50">
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <!-- Navigation Links -->
@@ -76,7 +76,7 @@
 
         <!-- Page Heading -->
         @isset($header)
-            <header class="bg-white dark:bg-gray-800 shadow">
+            <header class="bg-white dark:bg-gray-800 shadow z-50">
                 <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
@@ -84,7 +84,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main class="flex-grow sm:mt-0" style="padding-bottom: 50px;">
+        <main class="flex-grow sm:mt-0" style="padding-bottom: 10px;">
             @yield('content')
         </main>
     </div>

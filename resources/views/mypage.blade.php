@@ -80,7 +80,7 @@
 <div class="relative">
     <img src="{{ asset('images/spot-chart.jpg') }}" alt="プロフィールバナー" class="w-full object-cover mb-2">
     <div class="absolute inset-0 flex items-center justify-center">
-        <h1 class="text-[9vw] font-bold text-outline">登録スポット一覧</h1>
+        <h1 class="text-[9vw] font-black text-outline">登録スポット一覧</h1>
     </div>
 </div>    
 
