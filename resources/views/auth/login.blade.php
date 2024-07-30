@@ -21,6 +21,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            margin: 0 auto; /* 中央揃え */
         }
         h1 {
             text-align: center;
@@ -68,6 +69,14 @@
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 20px;
+        }
+
+        /* スマホ用の余白設定 */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 30px;
+                margin: 0 20px; /* スマホ画面幅での左右の余白 */
+            }
         }
     </style>
 </head>

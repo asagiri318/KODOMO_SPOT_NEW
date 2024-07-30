@@ -69,6 +69,13 @@
             border-radius: 4px;
             margin-bottom: 20px;
         }
+        /* スマホ用の余白設定 */
+        @media (max-width: 600px) {
+            .register-container {
+                padding: 30px;
+                margin: 0 20px; /* スマホ画面幅での左右の余白 */
+            }
+        }
     </style>
 </head>
 <body>
