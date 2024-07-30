@@ -22,11 +22,9 @@
     <div class="min-h-screen flex flex-col">
         <!-- Navigation -->
         @include('layouts.navigation')
-    </div>
-</body>
 
-<!-- Footer -->
-<footer class="bg-white dark:bg-gray-800 shadow">
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-gray-800 shadow mt-auto">
     <div class="max-w-7xl mx-auto py-3 px-4 sm:px-3 lg:px-8">
         <div class="flex justify-between items-center">
             <p class="text-gray-600">
@@ -36,7 +34,9 @@
             @endauth
         </div>
     </div>
-</footer>
+  </footer>
 
+</div>
+</body>
 </html>
 
