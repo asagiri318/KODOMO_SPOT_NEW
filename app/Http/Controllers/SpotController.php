@@ -306,8 +306,8 @@ class SpotController extends Controller
             $spots = $spots->withCount('likes')->orderBy('likes_count', 'desc');
         }
 
-        $spots = $spots->get(); // クエリを実行して結果を取得
+        $spots = $spots->paginate(10)->withQueryString();
 
-        return view('spot.shared', compact('spots')); // ビューに結果を渡す
+        return view('spot.shared', compact('spots'));
     }
 }

@@ -4,20 +4,20 @@
 <div class="container mx-auto mt-5 px-3">
     <h1 class="text-3xl font-bold mb-2 dark:text-white text-center">みんなの共有スポット</h1>
     
-  <div class="flex justify-between mb-2">
-    <form method="GET" action="{{ route('shared') }}" class="flex items-center space-x-2">
-        <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded px-1 py-2">
-        <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded whitespace-nowrap">検索</button>
-    </form>  
+    <div class="flex justify-between mb-2">
+        <form method="GET" action="{{ route('shared') }}" class="flex items-center space-x-2">
+            <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="border rounded px-1 py-2">
+            <button type="submit" class="bg-blue-500 text-white px-2 py-2 rounded whitespace-nowrap">検索</button>
+        </form>  
 
-    <div class="ml-4">
-        <select name="sort" id="sort" class="border rounded py-2 px-4 text-sm text-left pr-8">
-            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
-            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
-            <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
-        </select>
-    </div>    
-  </div>
+        <div class="ml-4">
+            <select name="sort" id="sort" class="border rounded py-2 px-4 text-sm text-left pr-8">
+                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>新しい順</option>
+                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>古い順</option>
+                <option value="most_liked" {{ request('sort') == 'most_liked' ? 'selected' : '' }}>人気順</option>
+            </select>
+        </div>    
+    </div>
     
     <div class="px-4 max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
         @if($spots->isEmpty())
@@ -56,19 +56,25 @@
                     </li>
                 @endforeach
             </ul>
+            
+            <!-- ページネーションリンク -->
+            <div class="mt-4">
+                {{ $spots->appends(request()->query())->links() }}
+            </div>
         @endif
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('sort').addEventListener('change', function() {
-        let selectedOption = this.value;
-        let url = new URL(window.location.href);
-        url.searchParams.set('sort', selectedOption);
-        window.location.href = url.toString();
+        document.getElementById('sort').addEventListener('change', function() {
+            let selectedOption = this.value;
+            let url = new URL(window.location.href);
+            url.searchParams.set('sort', selectedOption);
+            url.searchParams.set('page', 1); 
+            window.location.href = url.toString();
+        });
     });
-});
 
     document.addEventListener('DOMContentLoaded', (event) => {
         const likeButtons = document.querySelectorAll('.like-button');
