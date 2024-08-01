@@ -8,8 +8,8 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SpotController;
@@ -19,76 +19,116 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SpotPhotoController;
 use App\Http\Controllers\LikeController;
 
-// 共有スポットの表示
-Route::get('/shared', [SpotController::class, 'shared'])->name('shared');
-Route::get('/shared-spots', [SpotController::class, 'shared'])->name('spot.shared');
+// スポット関連
+Route::controller(SpotController::class)->group(function () {
+    Route::get('/shared', 'shared')->name('shared');
+    Route::post('{id}/unfavorite', [FavoriteController::class, 'removeFromFavorites'])->name('favorites.remove');
 
-// スポットに関連するルート
-Route::post('/spots/{spot}/like', [LikeController::class, 'toggleLike'])->name('spot.like');
-Route::get('/spots/{spot}/like-count', [LikeController::class, 'likeCount'])->name('spot.like-count');
-Route::post('/spots/{spotId}/like', [LikeController::class, 'toggleLike'])->name('spot.toggleLike');
-Route::get('/spots/{spotId}/like-count', [LikeController::class, 'likeCount'])->name('spot.likeCount');
+    Route::prefix('spots')->name('spot.')->group(function () {
+        Route::get('/shared-spots', 'shared')->name('shared');
+        Route::post('{id}/favorite', 'addToFavorites')->name('addToFavorites');
+        Route::get('/favorite', 'favorite')->name('favorite');
+    });
 
-Route::post('/spots/{id}/favorite', [SpotController::class, 'addToFavorites'])->name('spot.addToFavorites');
-Route::post('/spots/{id}/unfavorite', [FavoriteController::class, 'removeFromFavorites'])->name('favorites.remove');
-Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-
-// 認証が必要なルート
-Route::middleware('auth')->group(function () {
-    // ユーザープロフィール
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.deletePhoto');
-
-    // スポット関連のルート
-    Route::get('/spots/create', [SpotController::class, 'create'])->name('spot.create');
-    Route::post('/spots', [SpotController::class, 'store'])->name('spot.store');
-    Route::get('/spots/{id}', [SpotController::class, 'show'])->name('spot.show');
-    Route::get('/spots/{id}/edit', [SpotController::class, 'edit'])->name('spot.edit');
-    Route::put('/spots/{id}/update', [SpotController::class, 'update'])->name('spot.update');
-    Route::delete('/spots/{id}/delete', [SpotController::class, 'destroy'])->name('spot.destroy');
-
-    // SpotPhotoController に関連するルート
-    Route::delete('/spotphotos/{photo}', [SpotPhotoController::class, 'destroy'])->name('spotphoto.destroy');
-    Route::post('/spotphotos', [SpotPhotoController::class, 'store'])->name('spotphotos.store');
-
-    // メール確認、パスワード確認、ログアウト
-    Route::get('/verify-email', [EmailVerificationPromptController::class, '__invoke'])->name('verification.notice');
-    Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
-    Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->middleware('throttle:6,1')->name('verification.send');
-
-    Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
-    Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
-
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-    // マイページ関連
-    Route::get('/', [UserController::class, 'index'])->name('mypage');
-    Route::get('/spot/favorite', [SpotController::class, 'favorite'])->name('spot.favorite');
-    Route::get('/mypage', [UserController::class, 'index'])->name('mypage');
-
-    // ユーザーのプロフィール
-    Route::get('/user/{id}', [UserController::class, 'profile'])->name('user.profile');
+    // 認証が必要なスポット関連
+    Route::middleware('auth')->prefix('spots')->name('spot.')->group(function () {
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('{id}', 'show')->name('show');
+        Route::get('{id}/edit', 'edit')->name('edit');
+        Route::put('{id}/update', 'update')->name('update');
+        Route::delete('{id}/delete', 'destroy')->name('destroy');
+    });
 });
 
-// ゲストユーザー用のルート
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('/register', [RegisteredUserController::class, 'store']);
-
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-
-    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-
-    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+// お気に入り関連
+Route::prefix('favorites')->name('favorites.')->controller(FavoriteController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
 });
 
-// Ajax のルート
-Route::post('/ajax/cities', [AjaxController::class, 'getCities'])->name('ajax.cities');
+// いいね機能関連
+Route::prefix('spots')->name('spot.')->controller(LikeController::class)->group(function () {
+    Route::post('{spot}/like', 'toggleLike')->name('like');
+    Route::get('{spot}/like-count', 'likeCount')->name('like-count');
+});
+
+// スポット写真関連
+Route::prefix('spotphotos')->name('spotphotos.')->controller(SpotPhotoController::class)->group(function () {
+    Route::delete('{photo}', 'destroy')->name('destroy');
+    Route::post('/', 'store')->name('store');
+});
+
+// ユーザープロフィール関連
+Route::prefix('profile')->middleware('auth')->name('profile.')->controller(ProfileController::class)->group(function () {
+    Route::get('/edit', 'edit')->name('edit');
+    Route::patch('/update', 'update')->name('update');
+    Route::delete('/', 'destroy')->name('destroy');
+    Route::delete('/photo', 'deletePhoto')->name('deletePhoto');
+});
+
+// ユーザー関連
+Route::middleware('auth')->controller(UserController::class)->group(function () {
+    Route::get('/', 'index')->name('mypage');
+    Route::get('/mypage', 'index')->name('mypage');
+    Route::get('/user/{id}', 'profile')->name('user.profile');
+});
+
+// 認証関連
+Route::prefix('auth')->group(function () {
+    Route::controller(EmailVerificationPromptController::class)->group(function () {
+        Route::get('/verify-email', '__invoke')->name('verification.notice');
+    });
+
+    Route::controller(VerifyEmailController::class)->group(function () {
+        Route::get('/verify-email/{id}/{hash}', '__invoke')->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+    });
+
+    Route::controller(EmailVerificationNotificationController::class)->group(function () {
+        Route::post('/email/verification-notification', 'store')->middleware('throttle:6,1')->name('verification.send');
+    });
+
+    Route::controller(ConfirmablePasswordController::class)->group(function () {
+        Route::get('/confirm-password', 'show')->name('password.confirm');
+        Route::post('/confirm-password', 'store');
+    });
+
+    Route::controller(PasswordController::class)->group(function () {
+        Route::put('/password', 'update')->name('password.update');
+    });
+
+    Route::controller(AuthenticatedSessionController::class)->group(function () {
+        Route::post('/logout', 'destroy')->name('logout');
+    });
+});
+
+// ゲストユーザー用
+Route::middleware('guest')->prefix('guest')->group(function () {
+    Route::controller(RegisteredUserController::class)->group(function () {
+        Route::get('/register', 'create')->name('register');
+        Route::post('/register', 'store');
+    });
+
+    Route::controller(AuthenticatedSessionController::class)->group(function () {
+        Route::get('/login', 'create')->name('login');
+        Route::post('/login', 'store');
+    });
+
+    Route::controller(PasswordResetLinkController::class)->group(function () {
+        Route::get('/forgot-password', 'create')->name('password.request');
+        Route::post('/forgot-password', 'store')->name('password.email');
+    });
+
+    Route::controller(NewPasswordController::class)->group(function () {
+        Route::get('/reset-password/{token}', 'create')->name('password.reset');
+        Route::post('/reset-password', 'store')->name('password.update');
+    });
+
+    Route::controller(ResetPasswordController::class)->group(function () {
+        Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
+    });
+});
+
+// Ajax
+Route::prefix('ajax')->name('ajax.')->controller(AjaxController::class)->group(function () {
+    Route::post('/cities', 'getCities')->name('cities');
+});
