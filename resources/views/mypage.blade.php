@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- 登録完了時のアラート -->
 @if(session('status'))
     <div class="mt-2 dark:text-white alert alert-success">
         {{ session('status') }}
@@ -9,7 +8,6 @@
 @endif
 
 <section class="text-gray-600 body-font min-h-screen">
-<!-- プロフィール画像の上部にバナー画像を追加 -->
 <div class="relative">
     <img src="{{ asset('images/profile-banner.jpg') }}" alt="プロフィールバナー" class="w-full object-cover mb-2">
     <div class="absolute top-0 left-0 right-0 p-4 text-center text-white">

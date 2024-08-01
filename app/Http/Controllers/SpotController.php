@@ -38,7 +38,7 @@ class SpotController extends Controller
             'date_visited' => 'required|date',
             'child_age_range' => 'required|string|max:50',
             'rating' => 'required|integer|min:1|max:5',
-            'photos.*' => 'nullable|image|max:2048', // 画像の最大サイズは2048KB (2MB)
+            'photos.*' => 'nullable|image|max:2048', // 画像の最大サイズ2048KB (2MB)
             'spot_url' => 'nullable|url|max:255',
         ];
     }

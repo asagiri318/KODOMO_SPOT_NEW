@@ -57,9 +57,13 @@
                 @endforeach
             </ul>
             
-            <!-- ページネーションリンク -->
-            <div class="mt-4">
-                {{ $spots->appends(request()->query())->links() }}
+             <div class="mt-4 flex flex-col items-center sm:flex-row sm:justify-between">
+                <div class="mb-4 sm:mb-0">
+                    {{ $spots->appends(request()->query())->links() }}
+                </div>
+                <div class="text-sm text-gray-600">
+                    {{ $spots->firstItem() }}〜{{ $spots->lastItem() }}件目（全{{ $spots->total() }}件）
+                </div>
             </div>
         @endif
     </div>
