@@ -35,6 +35,6 @@ class FavoriteController extends Controller
         $user = Auth::user();
         $favoriteSpots = $user->favoriteSpots;
 
-        return view('favorites.index', compact('favoriteSpots'));
+        return view('spot.favorite', compact('favoriteSpots'));
     }
 }
