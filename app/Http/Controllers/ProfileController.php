@@ -52,7 +52,12 @@ class ProfileController extends Controller
 
             $file = $request->file('profile_photo');
             $filename = $user->id . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('profile_photos', $filename, 'public');
+
+            // 画像をリサイズ
+            $imageData = $this->resizeImage($file, 700, 400);
+            $path = 'profile_photos/' . $filename;
+            file_put_contents(storage_path('app/public/' . $path), $imageData);
+
             $user->photo = $path;
         }
 
@@ -96,5 +101,24 @@ class ProfileController extends Controller
         $children = $user->children()->get();
 
         return view('mypage', compact('user', 'spots', 'children'));
+    }
+
+    private function resizeImage($photo, $width, $height)
+    {
+        $img = imagecreatefromstring(file_get_contents($photo));
+        $originalWidth = imagesx($img);
+        $originalHeight = imagesy($img);
+
+        $resizedImage = imagecreatetruecolor($width, $height);
+        imagecopyresampled($resizedImage, $img, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+
+        ob_start();
+        imagejpeg($resizedImage);
+        $imageData = ob_get_clean();
+
+        imagedestroy($img);
+        imagedestroy($resizedImage);
+
+        return $imageData;
     }
 }
