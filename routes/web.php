@@ -102,14 +102,14 @@ Route::prefix('auth')->group(function () {
 });
 
 // ゲストユーザー用
-Route::middleware('guest')->prefix('guest')->group(function () {
+Route::middleware('guest')->group(function () {
     Route::controller(RegisteredUserController::class)->group(function () {
         Route::get('/register', 'create')->name('register');
         Route::post('/register', 'store');
     });
 
     Route::controller(AuthenticatedSessionController::class)->group(function () {
-        Route::get('/login', 'create')->name('login');
+        Route::get('/login', 'create')->name('guest.login'); // 変更しました
         Route::post('/login', 'store');
     });
 
@@ -127,6 +127,7 @@ Route::middleware('guest')->prefix('guest')->group(function () {
         Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
     });
 });
+
 
 // Ajax
 Route::prefix('ajax')->name('ajax.')->controller(AjaxController::class)->group(function () {
