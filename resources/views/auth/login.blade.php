@@ -14,6 +14,15 @@
             font-family: Arial, sans-serif;
             background-color: #f7fafc;
         }
+        .title {
+            position: absolute;
+            top: 5px;
+            text-align: center;
+            width: 100%;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
         .login-container {
             background: white;
             padding: 20px;
@@ -21,7 +30,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
-            margin: 0 auto; /* 中央揃え */
+            margin-top: 80px; /* 上部の余白 */
         }
         h1 {
             text-align: center;
@@ -75,12 +84,19 @@
         @media (max-width: 600px) {
             .login-container {
                 padding: 30px;
-                margin: 0 20px; /* スマホ画面幅での左右の余白 */
+                margin: 0 20px;
+            }
+            .title {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="title"><h1>スポシェア</h1>
+        〜お出かけスポット保存・共有アプリ〜<br>
+    </div>
+
     <div class="login-container">
         <h1>ログイン</h1>
 
@@ -114,7 +130,8 @@
 
         <div class="links">
             <a href="{{ route('password.request') }}">パスワードをお忘れですか？</a>
-            <a href="{{ route('register') }}">新規登録はこちら</a>
+            <a href="{{ route('register') }}">新規登録はこちら</a><br>
+            ※初めての方はご登録を♪
         </div>
     </div>
 </body>
