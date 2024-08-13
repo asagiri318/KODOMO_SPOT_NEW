@@ -76,7 +76,7 @@
 
 <!-- スポット一覧の表示 -->
 <div class="relative">
-        <h1 class="text-center text-[6vw] font-black text-black">My登録スポット一覧</h1>
+        <h1 class="text-center text-[6vw] font-black text-black dark:text-white">My登録スポット一覧</h1>
     </div>
 
 <div class="container px-4 mt-3 mx-auto">
