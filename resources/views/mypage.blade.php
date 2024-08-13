@@ -31,7 +31,7 @@
             </div>
             <div class="flex flex-col items-center text-center justify-center ml-4">
                 <a href="{{ route('profile.edit') }}" class="relative">
-                    <h2 class="font-medium title-font text-blue-600 text-2xl truncate hover:text-indigo-200 w-40 sm:w-60">
+                    <h2 class="font-medium title-font text-blue-600 text-xl sm:text-2xl truncate hover:text-indigo-200 w-full sm:w-60">
                         {{ $user->nickname }} <!-- ニックネームを表示 -->
                     </h2>
                 </a>
