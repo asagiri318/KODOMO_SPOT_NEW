@@ -4,7 +4,7 @@
 <section class="text-gray-600 body-font min-h-screen">
 
     <h2 class="text-center text-2xl font-bold mt-4">
-      {{ $user->nickname }}
+      {{ $user->nickname }}さんのプロフィール
     </h2>
 
   <div class="container px-5 py-4 mx-auto">
