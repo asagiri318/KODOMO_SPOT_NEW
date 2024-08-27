@@ -15,7 +15,7 @@ class SpotPhotoController extends Controller
     {
         $request->validate([
             'spot_id' => 'required|exists:spots,id',
-            'photos.*' => 'required|image|max:2048', // 画像の最大サイズは2048KB (2MB)
+            'photos.*' => 'required|image|max:4096', // 画像の最大サイズを4MBに設定
         ]);
 
         foreach ($request->file('photos') as $photo) {

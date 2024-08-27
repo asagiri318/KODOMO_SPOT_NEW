@@ -4,13 +4,13 @@
 <section class="text-gray-600 body-font min-h-screen">
 
     <h2 class="text-center text-2xl font-bold mt-4">
-      {{ $user->nickname }}
+      {{ $user->nickname }}さんのプロフィール
     </h2>
 
   <div class="container px-5 py-4 mx-auto">
     <div class="bg-white rounded-lg shadow-md">
       <div class="flex flex-col sm:flex-row items-center sm:items-start">
-        <div class="w-1/3 text-center py-2">
+        <div class="flex flex-col items-center sm:w-1/3 py-16">
           <div class="w-20 h-20 rounded-full inline-flex bg-gray-200 text-gray-400 cursor-pointer" onclick="openModal()" data-original-url="{{ url()->current() }}">
             @if ($user->photo)
               <img src="{{ asset('storage/' . $user->photo) }}" alt="プロフィール写真" class="rounded-full h-full w-full object-cover">

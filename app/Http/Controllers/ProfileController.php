@@ -30,7 +30,7 @@ class ProfileController extends Controller
         $request->validate([
             'nickname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
-            'profile_photo' => 'nullable|image|max:2048',
+            'profile_photo' => 'nullable|image|max:4096',
             'prefecture' => 'required|string',
             'city' => 'nullable|string|max:255',
             'children_birthdates.*' => 'nullable|date_format:Y-m-d',

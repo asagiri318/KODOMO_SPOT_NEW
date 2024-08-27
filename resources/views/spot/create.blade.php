@@ -27,6 +27,11 @@
         </div>
 
         <div class="mb-4">
+            <label for="date_visited" class="block text-sm font-medium text-gray-700">日付</label>
+            <input type="date" name="date_visited" id="date_visited" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
+        </div>
+
+        <div class="mb-4">
             <label for="prefecture" class="block text-sm font-medium text-gray-700">都道府県</label>
             <select name="prefecture" id="prefecture" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
                 <option value="">都道府県を選択してください</option>
@@ -44,11 +49,6 @@
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-700">内容</label>
             <textarea name="description" id="description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required placeholder="こんな所・こんな事した・おすすめポイントなど"></textarea>
-        </div>
-
-        <div class="mb-4">
-            <label for="date_visited" class="block text-sm font-medium text-gray-700">日付</label>
-            <input type="date" name="date_visited" id="date_visited" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
         </div>
 
         <div class="mb-4">

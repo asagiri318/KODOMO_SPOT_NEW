@@ -10,13 +10,13 @@
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
+        <p class="mb-2">日付: {{ $spot->date_visited }}</p>
         <h1 class="text-2xl font-bold mb-4">{{ $spot->title }}</h1>
         <p class="mb-1">場所:
             @if ($spot->prefecture)
                 {{ $spot->prefecture }}
             @endif
             {{ $spot->city }}</p>
-        <p class="mb-2">日付: {{ $spot->date_visited }}</p>
         <!-- 投稿者のプロフィール写真とニックネーム -->
         <div class="flex items-center mb-4">
             <div class="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
@@ -32,7 +32,7 @@
                 </a>
             </h2>
         </div>
-        <p class="mb-3">お子様の年齢（訪れた日）: {{ $spot->child_age_range }}</p>
+        <p class="mb-3">お子様の年齢: {{ $spot->child_age_range }}</p>
 
         <p class="mb-4">【内容】<br>{!! nl2br(e($spot->description)) !!}</p>
 

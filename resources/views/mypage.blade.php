@@ -31,7 +31,7 @@
             </div>
             <div class="flex flex-col items-center text-center justify-center ml-4">
                 <a href="{{ route('profile.edit') }}" class="relative">
-                    <h2 class="font-medium title-font text-blue-600 text-2xl truncate hover:text-indigo-200 w-40 sm:w-60">
+                    <h2 class="font-medium title-font text-blue-600 text-xl sm:text-2xl truncate hover:text-indigo-200 w-full sm:w-60">
                         {{ $user->nickname }} <!-- ニックネームを表示 -->
                     </h2>
                 </a>
@@ -76,13 +76,10 @@
 
 <!-- スポット一覧の表示 -->
 <div class="relative">
-    <img src="{{ asset('images/spot-chart.jpg') }}" alt="プロフィールバナー" class="w-full object-cover mb-2">
-    <div class="absolute inset-0 flex items-center justify-center">
-        <h1 class="text-[9vw] font-black text-outline">My登録スポット一覧</h1>
+        <h1 class="text-center text-[6vw] font-black text-black dark:text-white">My登録スポット一覧</h1>
     </div>
-</div>    
 
-<div class="container px-4 mt-6 mx-auto">
+<div class="container px-4 mt-3 mx-auto">
     <div class="flex justify-between mb-2 flex-nowrap">
         <form method="GET" action="{{ route('mypage') }}" class="flex items-center space-x-2" onsubmit="saveScrollPosition()">
             <input type="text" name="query" placeholder="キーワードを入力" value="{{ request('query') }}" class="rounded px-1 py-2">
@@ -125,7 +122,7 @@
                                 @endif
                             </p>
                              <p class="text-sm text-gray-500 mt-1">
-                                登録日: {{ \Carbon\Carbon::parse($spot->date_visited)->format('Y年m月d日') }}
+                                訪れた日: {{ \Carbon\Carbon::parse($spot->date_visited)->format('Y年m月d日') }}
                             </p>
                         </div>
                     </div>

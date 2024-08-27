@@ -97,7 +97,7 @@
 
         // いいねボタンのクリックイベント
         container.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent triggering the parent click event
+            e.stopPropagation(); 
 
             fetch(`/spots/${spotId}/like`, {
                 method: 'POST',

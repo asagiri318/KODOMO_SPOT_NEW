@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto mt-5 px-4">
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-4">スポットを編集</h1>
+        <h1 class="text-3xl font-bold text-center mb-4">スポットを編集</h1>
 
         @if ($errors->any())
             <div class="mb-4">
@@ -74,12 +74,12 @@
                 <label for="photos" class="block text-sm font-medium text-gray-700 mb-1">写真 (最大3つ)</label>
                 @foreach($spot->photos as $photo)
                     <div class="photo-input flex items-center mb-2" data-photo-id="{{ $photo->id }}">
-                        <input type="file" name="photos[]" class="mt-1 block border border-gray-300 rounded-md shadow-sm">
-                        <img src="{{ $photo->photo_path }}" class="px-1 h-10 w-16 rounded-lg mr-2">
+                        <input type="file" name="photos[]" class="mt-1 block border border-gray-300 rounded-md shadow-sm w-full max-w-xs">
+                        <img src="{{ $photo->photo_path }}" class="px-1 h-auto w-16 max-w-xs rounded-lg mr-2">
                         <button type="button" class="text-xs ml-2 btn-red remove-photo-btn" data-photo-id="{{ $photo->id }}">削除</button>
                     </div>
                 @endforeach
-            </div>
+            </div>            
             
             <p id="photo-error" class="text-red-500 text-xs mt-1" style="display: none;">写真は最大3つまで選択できます。</p>
             <button type="button" id="add-photo-btn" class="btn-blue mt-1 mb-4">写真の追加</button>

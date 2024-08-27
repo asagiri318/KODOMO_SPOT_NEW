@@ -7,10 +7,10 @@
         background-image: url('{{ asset('images/profile-fvbg.jpg') }}');
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+        background-repeat: no-repeat; 
         background-attachment: fixed; /* スクロール時に背景画像が固定される */
-        margin: 0; /* 上下の余白をリセット */
-        flex-grow: 1; /* 背景画像がページ全体を覆うようにする */
+        margin: 0;
+        flex-grow: 1;
     }
 </style>
 
