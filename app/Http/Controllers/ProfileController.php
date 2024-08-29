@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Http\Requests\StoreProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -25,17 +26,9 @@ class ProfileController extends Controller
         return view('profile.edit', compact('user', 'prefectures', 'children'));
     }
 
-    public function update(Request $request)
+    public function update(StoreProfileRequest $request)
     {
-        $request->validate([
-            'nickname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
-            'profile_photo' => 'nullable|image|max:4096',
-            'prefecture' => 'required|string',
-            'city' => 'nullable|string|max:255',
-            'children_birthdates.*' => 'nullable|date_format:Y-m-d',
-            'introduction' => 'nullable|string|max:1000',
-        ]);
+        // バリデーションは自動的に StoreProfileRequest 内で行われる
 
         $user = Auth::user();
         $user->nickname = $request->nickname;
@@ -87,14 +80,5 @@ class ProfileController extends Controller
         }
 
         return redirect()->route('profile.edit')->with('status', 'プロフィール写真が削除されました');
-    }
-
-    public function showMypage()
-    {
-        $user = Auth::user();
-        $spots = $user->spots()->get();
-        $children = $user->children()->get();
-
-        return view('mypage', compact('user', 'spots', 'children'));
     }
 }

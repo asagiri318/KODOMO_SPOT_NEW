@@ -22,11 +22,10 @@ use App\Http\Controllers\LikeController;
 // スポット関連
 Route::controller(SpotController::class)->group(function () {
     Route::get('/shared', 'shared')->name('shared');
-    Route::post('{id}/unfavorite', [FavoriteController::class, 'removeFromFavorites'])->name('favorites.remove');
 
     Route::prefix('spots')->name('spot.')->group(function () {
         Route::get('/shared-spots', 'shared')->name('shared');
-        Route::post('{id}/favorite', 'addToFavorites')->name('addToFavorites');
+        Route::post('{spot}/favorite', 'addToFavorites')->name('addToFavorites');
         Route::get('/favorite', 'favorite')->name('favorite');
     });
 
@@ -34,16 +33,17 @@ Route::controller(SpotController::class)->group(function () {
     Route::middleware('auth')->prefix('spots')->name('spot.')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
-        Route::get('{id}', 'show')->name('show');
-        Route::get('{id}/edit', 'edit')->name('edit');
-        Route::put('{id}/update', 'update')->name('update');
-        Route::delete('{id}/delete', 'destroy')->name('destroy');
+        Route::get('{spot}', 'show')->name('show');
+        Route::get('{spot}/edit', 'edit')->name('edit');
+        Route::put('{spot}/update', 'update')->name('update');
+        Route::delete('{spot}/delete', 'destroy')->name('destroy');
     });
 });
 
 // お気に入り関連
 Route::prefix('favorites')->name('favorites.')->controller(FavoriteController::class)->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::post('{spot}/unfavorite', 'removeFromFavorites')->name('remove');
 });
 
 // いいね機能関連
@@ -62,15 +62,13 @@ Route::prefix('spotphotos')->name('spotphotos.')->controller(SpotPhotoController
 Route::prefix('profile')->middleware('auth')->name('profile.')->controller(ProfileController::class)->group(function () {
     Route::get('/edit', 'edit')->name('edit');
     Route::patch('/update', 'update')->name('update');
-    Route::delete('/', 'destroy')->name('destroy');
     Route::delete('/photo', 'deletePhoto')->name('deletePhoto');
 });
 
 // ユーザー関連
 Route::middleware('auth')->controller(UserController::class)->group(function () {
-    Route::get('/', 'index')->name('mypage');
     Route::get('/mypage', 'index')->name('mypage');
-    Route::get('/user/{id}', 'profile')->name('user.profile');
+    Route::get('/user/{user}', 'profile')->name('user.profile');
 });
 
 // 認証関連
