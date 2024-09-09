@@ -30,6 +30,7 @@ class SpotController extends Controller
 
     public function create()
     {
+        // FIXME: blade に config('prefectures') で直接書いてOKです。こちらで代入して受け渡す必要はございません。
         $prefectures = config('prefectures'); // config ファイルから都道府県の一覧を取得
 
         return view('spot.create', [

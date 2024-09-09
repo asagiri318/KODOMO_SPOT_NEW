@@ -39,6 +39,7 @@
             @endif
         </p>        
           <p class="leading-relaxed text-lg mb-4">
+            <!-- $user->children で取得可能です -->
             @if ($children->isNotEmpty())
                 お子様の年齢：
                 @foreach ($children as $child)
@@ -60,7 +61,8 @@
     <div class="mt-4">
       <h2 class="text-center text-2xl font-bold mb-3">
         {{ $user->nickname }}さんの登録スポット</h2>
-      <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">      
+      <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <!-- $user->spots で取得可能です -->
         @if($spots->isEmpty())
             <p>登録されたスポットはありません。</p>
         @else
