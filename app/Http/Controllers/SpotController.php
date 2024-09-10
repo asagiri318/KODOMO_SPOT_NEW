@@ -90,6 +90,7 @@ class SpotController extends Controller
         return redirect()->route('mypage')->with('status', 'スポットが登録されました');
     }
 
+    // 詳細
     public function show(Spot $spot)
     {
         // IDに該当するスポットを取得
