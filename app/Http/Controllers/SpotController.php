@@ -13,6 +13,7 @@ use App\Models\Like;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 
+//下記詳細です
 class SpotController extends Controller
 {
     private function resizeImage($photo, $width, $height)
