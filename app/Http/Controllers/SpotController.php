@@ -13,7 +13,6 @@ use App\Models\Like;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 
-//詳細です
 class SpotController extends Controller
 {
     private function resizeImage($photo, $width, $height)
@@ -91,7 +90,6 @@ class SpotController extends Controller
         return redirect()->route('mypage')->with('status', 'スポットが登録されました');
     }
 
-    // 詳細テスト
     public function show(Spot $spot)
     {
         // IDに該当するスポットを取得
