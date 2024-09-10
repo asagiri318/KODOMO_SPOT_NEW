@@ -13,7 +13,6 @@ use App\Models\Like;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver;
 
-//詳細です
 class SpotController extends Controller
 {
     private function resizeImage($photo, $width, $height)
@@ -31,7 +30,6 @@ class SpotController extends Controller
 
     public function create()
     {
-        // FIXME: blade に config('prefectures') で直接書いてOKです。こちらで代入して受け渡す必要はございません。
         $prefectures = config('prefectures'); // config ファイルから都道府県の一覧を取得
 
         return view('spot.create', [
@@ -91,7 +89,6 @@ class SpotController extends Controller
         return redirect()->route('mypage')->with('status', 'スポットが登録されました');
     }
 
-    // 詳細
     public function show(Spot $spot)
     {
         // IDに該当するスポットを取得
