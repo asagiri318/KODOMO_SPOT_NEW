@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prefecture extends Model
 {
+    // FIXME: prefecture テーブルがないためモデルファイルは不要です。
+
     use HasFactory;
 
     protected $fillable = [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSpotRequest;
 use Illuminate\Http\Request;
 use App\Models\Spot;
 use App\Models\SpotPhoto;
@@ -27,22 +28,6 @@ class SpotController extends Controller
         return $image;
     }
 
-    // バリデーションルールを定義するメソッド
-    private function validationRules()
-    {
-        return [
-            'title' => 'required|string|max:255',
-            'prefecture' => 'required|string',
-            'city' => 'required|string|max:100',
-            'description' => 'required|string',
-            'date_visited' => 'required|date',
-            'child_age_range' => 'required|string|max:50',
-            'rating' => 'required|integer|min:1|max:5',
-            'photos.*' => 'nullable|image|max:4096',
-            'spot_url' => 'nullable|url|max:255',
-        ];
-    }
-
     public function create()
     {
         $prefectures = config('prefectures'); // config ファイルから都道府県の一覧を取得
@@ -52,14 +37,8 @@ class SpotController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreSpotRequest $request)
     {
-        // バリデーションルールを取得
-        $rules = $this->validationRules();
-
-        // リクエストのバリデーション
-        $request->validate($rules);
-
         // Spot モデルのインスタンスを作成
         $spot = new Spot();
 
@@ -110,28 +89,28 @@ class SpotController extends Controller
         return redirect()->route('mypage')->with('status', 'スポットが登録されました');
     }
 
-    public function show($id)
+    public function show(Spot $spot)
     {
         // IDに該当するスポットを取得
-        $spot = Spot::findOrFail($id);
+        $spot = Spot::findOrFail($spot->id);
 
         // ユーザーがお気に入り登録しているかどうかをチェック
         $isFavorited = Auth::check() && Auth::user()->favoriteSpots()->where('spot_id', $spot->id)->exists();
 
-        $spot = Spot::with('photos')->findOrFail($id);
+        $spot = Spot::with('photos')->findOrFail($spot->id);
         // 「いいね」数を取得
-        $likeCount = Like::where('spot_id', $id)->count();
-        $isFavorited = Auth::check() ? Auth::user()->favorites()->where('spot_id', $id)->exists() : false;
-        $isLiked = Auth::check() ? Auth::user()->likes()->where('spot_id', $id)->exists() : false;
+        $likeCount = Like::where('spot_id', $spot->id)->count();
+        $isFavorited = Auth::check() ? Auth::user()->favorites()->where('spot_id', $spot->id)->exists() : false;
+        $isLiked = Auth::check() ? Auth::user()->likes()->where('spot_id', $spot->id)->exists() : false;
 
         // 詳細ページを表示
         return view('spot.show', compact('spot', 'isFavorited', 'isLiked', 'likeCount'));
     }
 
-    public function addToFavorites($id)
+    public function addToFavorites(Spot $spot)
     {
         // IDに該当するスポットを取得
-        $spot = Spot::findOrFail($id);
+        $spot = Spot::findOrFail($spot->id);
 
         // ログインしているユーザーがすでにお気に入り登録しているかチェック
         if (Auth::user()->favoriteSpots()->where('spot_id', $spot->id)->exists()) {
@@ -145,11 +124,11 @@ class SpotController extends Controller
         return redirect()->route('spot.show', $spot->id)->with('success', 'お気に入りに登録しました');
     }
 
-    public function edit($id)
+    public function edit(Spot $spot)
     {
         // IDに該当するスポットを取得
-        $spot = Spot::findOrFail($id);
-        $photos = SpotPhoto::where('spot_id', $id)->get();
+        $spot = Spot::findOrFail($spot->id);
+        $photos = SpotPhoto::where('spot_id', $spot->id)->get();
 
         // 都道府県を取得
         $prefectures = config('prefectures');
@@ -162,14 +141,10 @@ class SpotController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreSpotRequest $request, Spot $spot)
     {
-        // バリデーションルールを取得
-        $rules = $this->validationRules();
-        $request->validate($rules);
-
         // IDに該当するスポットを取得
-        $spot = Spot::findOrFail($id);
+        $spot = Spot::findOrFail($spot->id);
 
         // フォームリクエストのデータを Spot モデルにセット
         $spot->title = $request->title;
@@ -230,10 +205,10 @@ class SpotController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Spot $spot)
     {
         // IDに該当するスポットを取得して削除する
-        $spot = Spot::findOrFail($id);
+        $spot = Spot::findOrFail($spot->id);
 
         // スポットに関連する写真も削除する
         foreach ($spot->photos as $photo) {

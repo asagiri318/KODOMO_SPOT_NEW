@@ -8,24 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    public function addToFavorites($id)
+
+    public function removeFromFavorites(Spot $spot)
     {
         $user = Auth::user();
-
-        // すでにお気に入りに追加されているか確認
-        if ($user->favoriteSpots()->where('spot_id', $id)->exists()) {
-            return redirect()->back()->with('info', 'このスポットはすでにお気に入りに追加されています。');
-        }
-
-        $user->favoriteSpots()->attach($id);
-
-        return redirect()->back()->with('success', 'スポットをお気に入りに追加しました。');
-    }
-
-    public function removeFromFavorites($id)
-    {
-        $user = Auth::user();
-        $user->favoriteSpots()->detach($id);
+        $user->favoriteSpots()->detach($spot->id);
 
         return redirect()->back()->with('success', 'スポットをお気に入りから削除しました。');
     }
