@@ -31,12 +31,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    // FIXME: prefecture テーブルがないため不要なメソッド
     // 都道府県とのリレーションシップ
     public function prefecture()
     {
         return $this->belongsTo(Prefecture::class);
     }
 
+    // ユーザーに birthdate カラムがないため不要です。
     // 年齢を計算するメソッド
     public function getAge()
     {
@@ -64,6 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Spot::class, 'user_favorite_spots', 'user_id', 'spot_id')->withTimestamps();
     }
 
+    // FIXME: 一つ上のメソッドとほぼ同じ？どこでも使われていないので削除でよろしいです。
     public function favorites()
     {
         return $this->belongsToMany(Spot::class, 'user_favorite_spots', 'user_id', 'spot_id');

@@ -35,10 +35,11 @@
             <label for="prefecture" class="block text-sm font-medium text-gray-700">都道府県</label>
             <select name="prefecture" id="prefecture" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required>
                 <option value="">都道府県を選択してください</option>
+                <!-- FIXME: $prefectures -> config('prefectures') と直接書いてしまってOKです -->
                 @foreach($prefectures as $prefecture)
                 <option value="{{ $prefecture['name'] }}">{{ $prefecture['name'] }}</option>
                 @endforeach
-            </select>                 
+            </select>
         </div>
 
         <div class="mb-4">

@@ -60,12 +60,21 @@ class UserController extends Controller
         return view('mypage', compact('user', 'spots', 'children'));
     }
 
+    // FIXME: 1ユーザーの情報を閲覧するメソッドなので、profile ではく show というメソッドの命名が正しいです。
     public function profile(User $user)
     {
+        // FIXME: $user は既に引数で、モデルに変換されて渡されているので、下の処理は不要です。
         $user = User::findOrFail($user->id);
+
+        // FIXME: $spots は $user->spots で取得できるため、下記の処理は不要です。
         $spots = Spot::where('user_id', $user->id)->get();
+        // FIXME: $spots は $user->children で取得できるため、下記の処理は不要です。
         $children = UserChild::where('user_id', $user->id)->get();
 
+        // $spots と $children は with を使用して事前に取得しておきましょう。
+        // https://qiita.com/HuntingRathalos/items/5a7cae35a49a2795e8f2
+
+        // FIXME: $spots と $children は $user モデルから取得可能なので view に渡すのは user だけでOKです。
         return view('profile.profile', compact('user', 'spots', 'children'));
     }
 }
